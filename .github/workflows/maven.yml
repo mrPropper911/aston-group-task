@@ -17,6 +17,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      dependency-graph: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
