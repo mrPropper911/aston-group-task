@@ -17,11 +17,11 @@ class LinearSearchTest {
     @BeforeAll
     static void generateTestValue() {
         list = Arrays.asList(
-                new Car.Builder().power(100).model("Audi").yearRelease(2006).build();
-                new Car.Builder().power(200).model("BMW").yearRelease(2007).build();
-                new Car.Builder().power(300).model("Mercedes").yearRelease(2009).build();
-                new Car.Builder().power(400).model("Toyota").yearRelease(2010).build();
-                new Car.Builder().power(500).model("Mercedes").yearRelease(2011).build();
+                new Car.Builder().power(100).model("Audi").yearRelease(2006).build(),
+                new Car.Builder().power(200).model("BMW").yearRelease(2007).build(),
+                new Car.Builder().power(300).model("Mercedes").yearRelease(2009).build(),
+                new Car.Builder().power(400).model("Toyota").yearRelease(2010).build(),
+                new Car.Builder().power(500).model("Mercedes").yearRelease(2011).build()
         );
     }
 
@@ -30,7 +30,7 @@ class LinearSearchTest {
         Comparator<Car> powerComparator = Comparator.comparingInt(Car::getPower);
         LinearSearch<Car> linearSearch = new LinearSearch<>(powerComparator);
 
-        Car existingCar = new Car(200, "", 1);
+        Car existingCar = new Car.Builder().power(200).model("").yearRelease(1).build();
         int index = linearSearch.search(list, existingCar);
 
         assertThat(index).isEqualTo(1);
@@ -41,7 +41,7 @@ class LinearSearchTest {
         Comparator<Car> yearComparator = Comparator.comparingInt(Car::getYearRelease);
         BinarySearch<Car> binarySearch = new BinarySearch<>(yearComparator);
 
-        Car notExistingCar = new Car(1, "", 1);
+        Car notExistingCar = new Car.Builder().power(1).model("").yearRelease(1).build();
         int index = binarySearch.search(list, notExistingCar);
 
         assertThat(index).isEqualTo(-1);

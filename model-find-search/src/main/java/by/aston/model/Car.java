@@ -13,7 +13,6 @@ public class Car implements Serializable, Comparable<Car>{
         this.power = builder.power;
         this.model = builder.model;
         this.yearRelease = builder.yearRelease;
-
     }
 
     public Integer getPower() {
