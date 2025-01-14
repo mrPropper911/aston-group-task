@@ -17,11 +17,11 @@ class BinarySearchTest {
     @BeforeAll
     static void generateTestValue() {
         list = Arrays.asList(
-                new Car(100, "Audi", 2006),
-                new Car(200, "BMW", 2007),
-                new Car(300, "Mercedes", 2009),
-                new Car(400, "Toyota", 2010),
-                new Car(500, "Mercedes", 2011)
+                new Car.Builder().power(100).model("Audi").yearRelease(2006).build();
+                new Car.Builder().power(200).model("BMW").yearRelease(2007).build();
+                new Car.Builder().power(300).model("Mercedes").yearRelease(2009).build();
+                new Car.Builder().power(400).model("Toyota").yearRelease(2010).build();
+                new Car.Builder().power(500).model("Mercedes".yearRelease(2011).build();
         );
     }
 

@@ -4,14 +4,16 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Car implements Serializable, Comparable<Car>{
+    private static final long SerialVersionUID = 42L;
     private final Integer power;
     private final String model;
     private final Integer yearRelease;
 
     public Car(Builder builder) {
         this.power = builder.power;
-        this.yearRelease = builder.yearRelease;
         this.model = builder.model;
+        this.yearRelease = builder.yearRelease;
+
     }
 
     public Integer getPower() {
@@ -31,9 +33,7 @@ public class Car implements Serializable, Comparable<Car>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return Objects.equals(power, car.power) &&
-                Objects.equals(yearRelease, car.yearRelease) &&
-                Objects.equals(model, car.model);
+        return Objects.equals(power, car.power) && Objects.equals(model, car.model) && Objects.equals(yearRelease, car.yearRelease);
     }
 
     @Override
@@ -49,11 +49,13 @@ public class Car implements Serializable, Comparable<Car>{
 
     @Override
     public int compareTo(Car car) {
-        if(this.model.compareTo(car.model) < 0) {return -1;}
-        else if(this.model.compareTo(car.model) > 0) {return 1;}
-        else if (this.power - car.power < 0) {return -1;}
-        else if (this.power - car.power > 0) {return 1;}
-        else return Integer.compare(this.yearRelease - car.yearRelease, 0);
+        int modelsCompareResult = this.model.compareTo(car.model);
+        if(modelsCompareResult != 0){ return modelsCompareResult;}
+
+        int powersCompareResult = this.power - car.power;
+        if(powersCompareResult != 0){ return powersCompareResult;}
+
+        return this.yearRelease - car.yearRelease;
     }
 
     public static class Builder{

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Vegetable implements Serializable, Comparable<Vegetable> {
+    private static final long SerialVersionUID = 42L;
     private final String type;
     private final Double weight;
     private final String color;
@@ -31,9 +32,7 @@ public class Vegetable implements Serializable, Comparable<Vegetable> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vegetable vegetable = (Vegetable) o;
-        return Objects.equals(weight, vegetable.weight) &&
-                Objects.equals(type, vegetable.type) &&
-                Objects.equals(color, vegetable.color);
+        return Objects.equals(type, vegetable.type) && Objects.equals(weight, vegetable.weight) && Objects.equals(color, vegetable.color);
     }
 
     @Override
@@ -49,11 +48,13 @@ public class Vegetable implements Serializable, Comparable<Vegetable> {
 
     @Override
     public int compareTo(Vegetable vegetable) {
-        if(this.type.compareTo(vegetable.type) < 0) {return -1;}
-        else if(this.type.compareTo(vegetable.type) > 0) {return 1;}
-        else if (this.color.compareTo(vegetable.color) < 0) {return -1;}
-        else if (this.color.compareTo(vegetable.color) > 0) {return 1;}
-        else return Double.compare(this.weight.compareTo(vegetable.weight), 0);
+        int typesCompareResult = this.type.compareTo(vegetable.type);
+        if(typesCompareResult != 0){ return typesCompareResult;}
+
+        int colorsCompareResult = this.color.compareTo(vegetable.color);
+        if(colorsCompareResult != 0){ return colorsCompareResult;}
+
+        return Double.compare(this.weight - vegetable.weight, 0);
     }
 
     public static class Builder{

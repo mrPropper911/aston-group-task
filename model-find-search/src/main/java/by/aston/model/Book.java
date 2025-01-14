@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Book implements Serializable, Comparable<Book>{
+    private static final long SerialVersionUID = 42L;
     private final String title;
     private final String author;
     private final Integer numberPages;
@@ -32,9 +33,7 @@ public class Book implements Serializable, Comparable<Book>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(numberPages, book.numberPages) &&
-                Objects.equals(author, book.author) &&
-                Objects.equals(title, book.title);
+        return Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(numberPages, book.numberPages);
     }
 
     @Override
@@ -50,11 +49,13 @@ public class Book implements Serializable, Comparable<Book>{
 
     @Override
     public int compareTo(Book book) {
-        if(this.author.compareTo(book.author) < 0) {return -1;}
-        else if(this.author.compareTo(book.author) > 0) {return 1;}
-        else if (this.title.compareTo(book.title) < 0) {return -1;}
-        else if (this.title.compareTo(book.title) > 0) {return 1;}
-        else return Integer.compare(this.numberPages.compareTo(book.numberPages), 0);
+        int authorsCompareResult = this.author.compareTo(book.author);
+        if(authorsCompareResult != 0){ return authorsCompareResult;}
+
+        int titleCompareResult = this.title.compareTo(book.title);
+        if(titleCompareResult != 0){ return titleCompareResult;}
+
+        return this.numberPages - book.numberPages;
     }
 
     public static class Builder{
