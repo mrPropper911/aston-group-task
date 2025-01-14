@@ -3,7 +3,7 @@ package by.aston.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Car implements Serializable, Comparable<Car>
+public class Car implements Serializable, Comparable<Car>{
     private final Integer power;
     private final String model;
     private final Integer yearRelease;
