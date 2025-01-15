@@ -17,11 +17,11 @@ class BinarySearchTest {
     @BeforeAll
     static void generateTestValue() {
         list = Arrays.asList(
-                new Car(100, "Audi", 2006),
-                new Car(200, "BMW", 2007),
-                new Car(300, "Mercedes", 2009),
-                new Car(400, "Toyota", 2010),
-                new Car(500, "Mercedes", 2011)
+                new Car.Builder().power(100).model("Audi").yearRelease(2006).build(),
+                new Car.Builder().power(200).model("BMW").yearRelease(2007).build(),
+                new Car.Builder().power(300).model("Mercedes").yearRelease(2009).build(),
+                new Car.Builder().power(400).model("Toyota").yearRelease(2010).build(),
+                new Car.Builder().power(500).model("Mercedes").yearRelease(2011).build()
         );
     }
 
@@ -30,7 +30,7 @@ class BinarySearchTest {
         Comparator<Car> powerComparator = Comparator.comparingInt(Car::getPower);
         BinarySearch<Car> binarySearch = new BinarySearch<>(powerComparator);
 
-        Car existingCar = new Car(200, "", 1);
+        Car existingCar = new Car.Builder().power(200).model("").yearRelease(1).build();
         int index = binarySearch.search(list, existingCar);
 
         assertThat(index).isEqualTo(1);
@@ -43,7 +43,7 @@ class BinarySearchTest {
                 .thenComparing(Car::getYearRelease);
         BinarySearch<Car> binarySearch = new BinarySearch<>(powerComparator);
 
-        Car existingCar = new Car(300, "Mercedes", 2009);
+        Car existingCar = new Car.Builder().power(300).model("Mercedes").yearRelease(2009).build();
         int index = binarySearch.search(list, existingCar);
 
         assertThat(index).isEqualTo(2);
@@ -55,7 +55,7 @@ class BinarySearchTest {
         Comparator<Car> yearComparator = Comparator.comparingInt(Car::getYearRelease);
         BinarySearch<Car> binarySearch = new BinarySearch<>(yearComparator);
 
-        Car notExistingCar = new Car(1, "", 1);
+        Car notExistingCar = new Car.Builder().power(1).model("").yearRelease(1).build();
         int index = binarySearch.search(list, notExistingCar);
 
         assertThat(index).isEqualTo(-1);
