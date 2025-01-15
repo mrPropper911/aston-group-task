@@ -32,7 +32,8 @@ public class Vegetable implements Serializable, Comparable<Vegetable> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vegetable vegetable = (Vegetable) o;
-        return Objects.equals(type, vegetable.type) && Objects.equals(weight, vegetable.weight) && Objects.equals(color, vegetable.color);
+        return Objects.equals(type, vegetable.type) && Objects.equals(weight, vegetable.weight)
+                && Objects.equals(color, vegetable.color);
     }
 
     @Override

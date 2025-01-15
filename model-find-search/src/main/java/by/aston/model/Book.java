@@ -13,7 +13,6 @@ public class Book implements Serializable, Comparable<Book>{
         this.numberPages = builder.numberPages;
         this.title = builder.title;
         this.author = builder.author;
-
     }
 
     public String getTitle() {
@@ -33,7 +32,8 @@ public class Book implements Serializable, Comparable<Book>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(numberPages, book.numberPages);
+        return Objects.equals(title, book.title) && Objects.equals(author, book.author)
+                && Objects.equals(numberPages, book.numberPages);
     }
 
     @Override
