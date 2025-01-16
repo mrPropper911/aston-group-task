@@ -1,9 +1,11 @@
 package by.aston.model;
 
+import by.aston.service.further_sort.CompareValue;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Vegetable implements Serializable, Comparable<Vegetable> {
+public class Vegetable implements Serializable, Comparable<Vegetable>, CompareValue {
     private static final long SerialVersionUID = 42L;
     private final String type;
     private final Double weight;
@@ -26,7 +28,6 @@ public class Vegetable implements Serializable, Comparable<Vegetable> {
     public String getColor() {
         return color;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,6 +57,12 @@ public class Vegetable implements Serializable, Comparable<Vegetable> {
         if(colorsCompareResult != 0){ return colorsCompareResult;}
 
         return Double.compare(this.weight - vegetable.weight, 0);
+    }
+
+    @Override
+    public Integer getValue() {
+        Integer weightInt = (int) Math.ceil(weight);
+        return weightInt;
     }
 
     public static class Builder{

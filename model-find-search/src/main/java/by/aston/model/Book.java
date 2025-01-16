@@ -1,9 +1,11 @@
 package by.aston.model;
 
+import by.aston.service.further_sort.CompareValue;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Book implements Serializable, Comparable<Book>{
+public class Book implements Serializable, Comparable<Book>, CompareValue {
     private static final long SerialVersionUID = 42L;
     private final String title;
     private final String author;
@@ -35,7 +37,6 @@ public class Book implements Serializable, Comparable<Book>{
         return Objects.equals(title, book.title) && Objects.equals(author, book.author)
                 && Objects.equals(numberPages, book.numberPages);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(title, author, numberPages);
@@ -56,6 +57,11 @@ public class Book implements Serializable, Comparable<Book>{
         if(titleCompareResult != 0){ return titleCompareResult;}
 
         return this.numberPages - book.numberPages;
+    }
+
+    @Override
+    public Integer getValue() {
+        return numberPages;
     }
 
     public static class Builder{

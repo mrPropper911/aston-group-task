@@ -24,13 +24,13 @@ class CustomCollectionsTest {
     void testSortingWithNonComparator() {
         CustomCollections.sort(list);
 
-        List<Car> expectedCatList = Arrays.asList(
+        List<Car> expectedCarList = Arrays.asList(
                 new Car.Builder().power(700).model("Audi").yearRelease(2009).build(),
                 new Car.Builder().power(200).model("BMW").yearRelease(2007).build(),
                 new Car.Builder().power(300).model("Mercedes").yearRelease(2008).build()
         );
 
-        assertThat(list).containsExactlyElementsOf(expectedCatList);
+        assertThat(list).containsExactlyElementsOf(expectedCarList);
     }
 
     @Test
@@ -40,13 +40,13 @@ class CustomCollectionsTest {
 
         CustomCollections.sort(list, carComparator);
 
-        List<Car> expectedCatList = Arrays.asList(
+        List<Car> expectedCarList = Arrays.asList(
                 new Car.Builder().power(200).model("BMW").yearRelease(2007).build(),
                 new Car.Builder().power(300).model("Mercedes").yearRelease(2008).build(),
                 new Car.Builder().power(700).model("Audi").yearRelease(2009).build()
         );
 
-        assertThat(list).containsExactlyElementsOf(expectedCatList);
+        assertThat(list).containsExactlyElementsOf(expectedCarList);
     }
 
     @Test
@@ -63,6 +63,25 @@ class CustomCollectionsTest {
         );
         CustomCollections.sort(singleElementList);
         assertThat(singleElementList).hasSize(1);
+    }
+
+    @Test
+    void testSortingWithManyElementList() {
+        int size = 10_000;
+        List<Integer> muchElementsForShell = new ArrayList<>(size);
+        List<Integer> muchElementsForDefSort = new ArrayList<>(size);
+
+        Random random = new Random();
+
+        for (int i = 0; i < size; i++) {
+            muchElementsForShell.add(random.nextInt(100));
+        }
+        muchElementsForDefSort.addAll(muchElementsForShell);
+
+        CustomCollections.sort(muchElementsForShell);
+        Collections.sort(muchElementsForDefSort);
+
+        assertThat(muchElementsForShell).hasSameElementsAs(muchElementsForDefSort);
     }
 
     @Test
