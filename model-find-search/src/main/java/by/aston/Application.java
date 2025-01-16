@@ -1,9 +1,10 @@
 package by.aston;
 
-import by.aston.view.Simulation;
+import by.aston.controller.UserInterfaceApplication;
 
 public class Application {
     public static void main(String[] args) {
-        Simulation.run();
+        var ui = new UserInterfaceApplication();
+        ui.run();
     }
 }
