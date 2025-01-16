@@ -4,23 +4,22 @@ package by.aston.controller;
 import by.aston.model.Book;
 import by.aston.model.Car;
 import by.aston.model.Vegetable;
-import by.aston.service.search.BinarySearch;
-import by.aston.service.search.CustomSearch;
-import by.aston.service.search.LinearSearch;
+import by.aston.service.CustomCollections;
 import by.aston.view.FileInput;
 import by.aston.view.KeyboardInput;
 import by.aston.view.RandomInput;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+
+import static by.aston.utils.NumberUtils.isEven;
 
 public class UserInterfaceApplication {
     private final Scanner scanner = new Scanner(System.in);
     private final FileInput fileInput = new FileInput();
     private final KeyboardInput keyboardInput = new KeyboardInput(scanner);
     private final RandomInput randomInput = new RandomInput();
-//    private final CustomSort<Object> customSort = new CustomSort();
-    private CustomSearch<Object> customSearch;
     private List<Object> currentData = null;
 
     public void run() {
@@ -34,7 +33,12 @@ public class UserInterfaceApplication {
             System.out.println("4. Вывести текущие данные");
             System.out.println("5. Выйти");
 
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = 0;
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException ex) {
+                System.out.println("Введите число от 1 до 5");
+            }
 
             switch (choice) {
                 case 1 -> handleInput();
@@ -120,16 +124,57 @@ public class UserInterfaceApplication {
         System.out.println("1. Обычная сортировка");
         System.out.println("2. Сортировка с учётом чётных/нечётных значений");
 
-        boolean specialSort = switch (Integer.parseInt(scanner.nextLine())) {
-            case 1 -> false;
-            case 2 -> true;
+        int choice;
+        try {
+            choice = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Некорректный ввод. Будет выполнена обычная сортировка.");
+            choice = 1;
+        }
+
+        Comparator<Object> comparator = Comparator.comparing(Object::toString);
+
+        // Обработка выбора
+        switch (choice) {
+            case 1 -> {
+                try {
+                    CustomCollections.sort(currentData, comparator);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Ошибка сортировки: " + e.getMessage());
+                    return;
+                }
+            }
+            case 2 -> {
+                Comparator<Object> specialComparator = (o1, o2) -> {
+                    boolean isFirstEven = isEven(o1);
+                    boolean isSecondEven = isEven(o2);
+
+                    // Сначала четные, затем нечетные
+                    if (isFirstEven && !isSecondEven) return -1;
+                    if (!isFirstEven && isSecondEven) return 1;
+
+                    // Если оба четные или оба нечетные, сортируем по значению
+                    return comparator.compare(o1, o2);
+                };
+
+                try {
+                    CustomCollections.sort(currentData, specialComparator);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Ошибка сортировки: " + e.getMessage());
+                    return;
+                }
+            }
             default -> {
                 System.out.println("Неверный выбор. Будет выполнена обычная сортировка.");
-                yield false;
+                try {
+                    CustomCollections.sort(currentData, comparator);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Ошибка сортировки: " + e.getMessage());
+                    return;
+                }
             }
-        };
+        }
 
-//        customSort.sort(currentData, specialSort);
         System.out.println("Сортировка завершена. Отсортированные данные:");
         displayInfo();
     }
@@ -144,46 +189,64 @@ public class UserInterfaceApplication {
         System.out.println("1. BinarySearch");
         System.out.println("2. LinearSearch");
 
-        customSearch = switch (Integer.parseInt(scanner.nextLine())) {
-            case 1 -> new BinarySearch<>(null); // TODO
-            case 2 -> new LinearSearch<>(null); // TODO
+        int choice;
+        try {
+            choice = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Некорректный ввод. Попробуйте снова.");
+            return;
+        }
+
+        System.out.print("Введите элемент для поиска: ");
+        String target = scanner.nextLine();
+
+        Object key = parseKey(target, currentData.get(0).getClass());
+        if (key == null) {
+            System.out.println("Неверный формат ключа для поиска.");
+            return;
+        }
+
+        Comparator<Object> comparator = Comparator.comparing(Object::toString);
+        int index = -1;
+
+        switch (choice) {
+            case 1 -> {
+                try {
+                    index = CustomCollections.searchBinary(currentData, key, comparator);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Ошибка: " + e.getMessage());
+                    return;
+                }
+            }
+            case 2 -> {
+                for (int i = 0; i < currentData.size(); i++) {
+                    if (comparator.compare(currentData.get(i), key) == 0) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
             default -> {
                 System.out.println("Неверный выбор.");
-                yield null;
-            }
-        };
-
-        if (customSearch != null) {
-            System.out.print("Введите элемент для поиска: ");
-            String target = scanner.nextLine();
-
-            Object key = parseKey(target, currentData.get(0).getClass());
-            if (key == null) {
-                System.out.println("Неверный формат ключа для поиска.");
                 return;
             }
+        }
 
-            int index = customSearch.search(currentData, key);
-            if (index != -1) {
-                System.out.println("Элемент найден: " + currentData.get(index));
-            } else {
-                System.out.println("Элемент не найден.");
-            }
+        if (index != -1) {
+            System.out.println("Элемент найден: " + currentData.get(index));
+        } else {
+            System.out.println("Элемент не найден.");
         }
     }
-
 
     private Object parseKey(String input, Class<?> clazz) {
         try {
             if (clazz == Car.class) {
-//                return new Car.Builder().setModel(input).build();
-                return new Car(null, null, null);
+                return new Car.Builder().model(input).build();
             } else if (clazz == Book.class) {
-//                return new Book.Builder().setTitle(input).build();
-                return new Book();
+                return new Book.Builder().title(input).build();
             } else if (clazz == Vegetable.class) {
-//                return new Vegetable.Builder().setType(input).build();
-                return new Vegetable();
+                return new Vegetable.Builder().type(input).build();
             }
         } catch (Exception e) {
             System.out.println("Ошибка преобразования ключа: " + e.getMessage());
