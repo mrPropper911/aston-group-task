@@ -1,9 +1,11 @@
 package by.aston.model;
 
+import by.aston.service.further_sort.CompareValue;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Car implements Serializable, Comparable<Car>{
+public class Car implements Serializable, Comparable<Car>, CompareValue {
     private static final long SerialVersionUID = 42L;
     private final Integer power;
     private final String model;
@@ -34,7 +36,6 @@ public class Car implements Serializable, Comparable<Car>{
         Car car = (Car) o;
         return Objects.equals(power, car.power) && Objects.equals(model, car.model) && Objects.equals(yearRelease, car.yearRelease);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(power, model, yearRelease);
@@ -55,6 +56,11 @@ public class Car implements Serializable, Comparable<Car>{
         if(powersCompareResult != 0){ return powersCompareResult;}
 
         return this.yearRelease - car.yearRelease;
+    }
+
+    @Override
+    public Integer getValue() {
+        return power;
     }
 
     public static class Builder{
