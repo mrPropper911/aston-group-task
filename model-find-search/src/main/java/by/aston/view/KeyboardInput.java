@@ -19,7 +19,6 @@ public class KeyboardInput {
         System.out.println("4. Выход");
 
         int choice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
 
         switch (choice) {
             case 1:
@@ -41,73 +40,86 @@ public class KeyboardInput {
     }
 
     public <T> void inputFromConsole(Class<T> clazz) {
-        System.out.print("Введите количество элементов для создания: ");
-        int count = scanner.nextInt();
-        scanner.nextLine(); // consume newline
+    System.out.print("Введите количество элементов для создания: ");
+    int count = scanner.nextInt();
+    scanner.nextLine();
+    List<T> collection = new ArrayList<>();
 
-        List<T> collection = new ArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-            try {
-                if (clazz == Car.class) {
-                    System.out.print("Введите модель автомобиля: ");
-                    String model = scanner.nextLine();
-                    System.out.print("Введите мощность автомобиля: ");
-                    int power = scanner.nextInt();
-                    System.out.print("Введите год производства автомобиля: ");
-                    int year = scanner.nextInt();
-                    scanner.nextLine(); // consume newline
-
-                    Car car = new Car.Builder()
-                            .model(model)
-                            .power(power)
-                            .yearRelease(year)
-                            .build();
-                    collection.add((T) car);
-                } else if (clazz == Book.class) {
-                    System.out.print("Введите автора книги: ");
-                    String author = scanner.nextLine();
-                    System.out.print("Введите название книги: ");
-                    String title = scanner.nextLine();
-                    System.out.print("Введите количество страниц книги: ");
-                    int pages = scanner.nextInt();
-                    scanner.nextLine(); // consume newline
-
-                    Book book = new Book.Builder()
-                            .author(author)
-                            .title(title)
-                            .numberPages(pages)
-                            .build();
-                    collection.add((T) book);
-                } else if (clazz == Vegetable.class) {
-                    System.out.print("Введите тип корнеплода: ");
-                    String type = scanner.nextLine();
-                    System.out.print("Введите вес корнеплода: ");
-                    double weight = scanner.nextDouble();
-                    scanner.nextLine(); // consume newline
-                    System.out.print("Введите цвет корнеплода: ");
-                    String color = scanner.nextLine();
-
-                    Vegetable vegetable = new Vegetable.Builder()
-                            .type(type)
-                            .weight(weight)
-                            .color(color)
-                            .build();
-                    collection.add((T) vegetable);
-                }
-            } catch (IllegalArgumentException e) {
-                System.out.println("Ошибка при создании объекта: " + e.getMessage());
-                i--; // Уменьшаем счетчик, чтобы повторить ввод для этого объекта
-            } catch (Exception e) {
-                System.out.println("Произошла ошибка: " + e.getMessage());
-                scanner.nextLine(); // Очистка ввода
+    for (int i = 0; i < count; i++) {
+        try {
+            T obj = createObject(clazz);
+            if (obj != null) {
+                collection.add(obj);
             }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка при создании объекта: " + e.getMessage());
+            i--; // Уменьшаем счетчик, чтобы повторить ввод для этого объекта
+        } catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+            scanner.nextLine(); // Очистка ввода
         }
+    }
 
-        // Выводим созданные объекты
-        System.out.println("Созданные объекты:");
-        for (T obj : collection) {
-            System.out.println(obj);
+    // Выводим созданные объекты
+    System.out.println("Созданные объекты: " + collection); // Используем toString() для вывода коллекции
+    }
+
+    private <T> T createObject(Class<T> clazz) {
+        if (clazz == Car.class) {
+            return (T) createCar();
+        } else if (clazz == Book.class) {
+            return (T) createBook();
+        } else if (clazz == Vegetable.class) {
+            return (T) createVegetable();
         }
+        return null;
+    }
+
+    private Car createCar() {
+        System.out.print("Введите модель автомобиля: ");
+        String model = scanner.nextLine();
+        System.out.print("Введите мощность автомобиля: ");
+        int power = scanner.nextInt();
+        System.out.print("Введите год производства автомобиля: ");
+        int year = scanner.nextInt();
+        scanner.nextLine();
+
+        return new Car.Builder()
+                .model(model)
+                .power(power)
+                .yearRelease(year)
+                .build();
+    }
+
+    private Book createBook() {
+        System.out.print("Введите автора книги: ");
+        String author = scanner.nextLine();
+        System.out.print("Введите название книги: ");
+        String title = scanner.nextLine();
+        System.out.print("Введите количество страниц книги: ");
+        int pages = scanner.nextInt();
+        scanner.nextLine();
+
+        return new Book.Builder()
+                .author(author)
+                .title(title)
+                .numberPages(pages)
+                .build();
+    }
+
+    private Vegetable createVegetable() {
+        System.out.print("Введите тип корнеплода: ");
+        String type = scanner.nextLine();
+        System.out.print("Введите вес корнеплода: ");
+        double weight = scanner.nextDouble();
+        scanner.nextLine(); // consume newline
+        System.out.print("Введите цвет корнеплода: ");
+        String color = scanner.nextLine();
+
+        return new Vegetable.Builder()
+                .type(type)
+                .weight(weight)
+                .color(color)
+                .build();
     }
 }
