@@ -1,0 +1,3 @@
+books.file.path=src/main/resources/data.Books.txt
+cars.file.path=src/main/resources/data.Cars.txt
+vegetables.file.path=src/main/resources/data.Vegetables.txt
