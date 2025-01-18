@@ -31,6 +31,7 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
     public String getColor() {
         return color;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,10 +55,14 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
     @Override
     public int compareTo(Vegetable vegetable) {
         int typesCompareResult = this.type.compareTo(vegetable.type);
-        if(typesCompareResult != 0){ return typesCompareResult;}
+        if (typesCompareResult != 0) {
+            return typesCompareResult;
+        }
 
         int colorsCompareResult = this.color.compareTo(vegetable.color);
-        if(colorsCompareResult != 0){ return colorsCompareResult;}
+        if (colorsCompareResult != 0) {
+            return colorsCompareResult;
+        }
 
         return Double.compare(this.weight - vegetable.weight, 0);
     }
@@ -97,27 +102,27 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
         return (int) Math.ceil(weight);
     }
 
-    public static class Builder{
+    public static class Builder {
         private String type;
         private Double weight;
         private String color;
 
-        public Builder type(String type){
+        public Builder type(String type) {
             this.type = type;
             return this;
         }
 
-        public Builder color(String color){
+        public Builder color(String color) {
             this.color = color;
             return this;
         }
 
-        public Builder weight(Double weight){
+        public Builder weight(Double weight) {
             this.weight = weight;
             return this;
         }
 
-        public Vegetable build(){
+        public Vegetable build() {
             return new Vegetable(this);
         }
     }
