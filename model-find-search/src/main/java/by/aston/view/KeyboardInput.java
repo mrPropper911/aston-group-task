@@ -3,7 +3,9 @@ package by.aston.view;
 import by.aston.model.Book;
 import by.aston.model.Car;
 import by.aston.model.Vegetable;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,12 +13,20 @@ public class KeyboardInput {
 
     public Scanner scanner = new Scanner(System.in);
 
-    public void userDialogInit() {
-        System.out.println("Выберите тип коллекции для создания:");
-        System.out.println("1. Автомобили");
-        System.out.println("2. Книги");
-        System.out.println("3. Корнеплоды");
-        System.out.println("4. Выход");
+    private final DataInput input;
+
+    public KeyboardInput(DataInput input) {
+        this.input = input;
+    }
+
+    //todo userDialogInit перенести текст
+
+    public <T> List<T> getObjectList() {
+        input.showMessage("Выберите тип коллекции для создания:");
+        input.showMessage("1. Автомобили");
+        input.showMessage("2. Книги");
+        input.showMessage("3. Корнеплоды");
+        input.showMessage("4. Выход");
 
         int choice = scanner.nextInt();
 
@@ -31,37 +41,39 @@ public class KeyboardInput {
                 inputFromConsole(Vegetable.class);
                 break;
             case 4:
-                System.out.println("Выход из программы.");
-                return;
+                input.showMessage("Выход из программы.");
+                return Collections.emptyList();
             default:
-                System.out.println("Неверный выбор. Пожалуйста, попробуйте снова.");
-                userDialogInit(); // Повторный вызов для нового выбора
+                input.showMessage("Неверный выбор. Пожалуйста, попробуйте снова.");
+                getObjectList(); // Повторный вызов для нового выбора
         }
+        //todo
+        return Collections.emptyList();
     }
 
-    public <T> void inputFromConsole(Class<T> clazz) {
-    System.out.print("Введите количество элементов для создания: ");
-    int count = scanner.nextInt();
-    scanner.nextLine();
-    List<T> collection = new ArrayList<>();
+    private <T> List<T> inputFromConsole(Class<T> clazz) {
+        input.showMessage("Введите количество элементов для создания: ");
+        int count = scanner.nextInt();
+        scanner.nextLine();
+        List<T> collection = new ArrayList<>();
 
-    for (int i = 0; i < count; i++) {
-        try {
-            T obj = createObject(clazz);
-            if (obj != null) {
-                collection.add(obj);
+        for (int i = 0; i < count; i++) {
+            try {
+                T obj = createObject(clazz);
+                if (obj != null) {
+                    collection.add(obj);
+                }
+            } catch (IllegalArgumentException e) {
+                input.showMessage("Ошибка при создании объекта: " + e.getMessage());
+                i--; // Уменьшаем счетчик, чтобы повторить ввод для этого объекта
+            } catch (Exception e) {
+                input.showMessage("Произошла ошибка: " + e.getMessage());
+                scanner.nextLine(); // Очистка ввода
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ошибка при создании объекта: " + e.getMessage());
-            i--; // Уменьшаем счетчик, чтобы повторить ввод для этого объекта
-        } catch (Exception e) {
-            System.out.println("Произошла ошибка: " + e.getMessage());
-            scanner.nextLine(); // Очистка ввода
         }
-    }
 
-    // Выводим созданные объекты
-    System.out.println("Созданные объекты: " + collection); // Используем toString() для вывода коллекции
+        input.showMessage("Созданные объекты: " + collection);
+        return collection;
     }
 
     private <T> T createObject(Class<T> clazz) {
@@ -75,12 +87,13 @@ public class KeyboardInput {
         return null;
     }
 
+    //todo добавить валидатор на каждое поле
     private Car createCar() {
-        System.out.print("Введите модель автомобиля: ");
+        input.showMessage("Введите модель автомобиля: ");
         String model = scanner.nextLine();
-        System.out.print("Введите мощность автомобиля: ");
+        input.showMessage("Введите мощность автомобиля: ");
         int power = scanner.nextInt();
-        System.out.print("Введите год производства автомобиля: ");
+        input.showMessage("Введите год производства автомобиля: ");
         int year = scanner.nextInt();
         scanner.nextLine();
 
@@ -92,11 +105,11 @@ public class KeyboardInput {
     }
 
     private Book createBook() {
-        System.out.print("Введите автора книги: ");
+        input.showMessage("Введите автора книги: ");
         String author = scanner.nextLine();
-        System.out.print("Введите название книги: ");
+        input.showMessage("Введите название книги: ");
         String title = scanner.nextLine();
-        System.out.print("Введите количество страниц книги: ");
+        input.showMessage("Введите количество страниц книги: ");
         int pages = scanner.nextInt();
         scanner.nextLine();
 
@@ -108,12 +121,12 @@ public class KeyboardInput {
     }
 
     private Vegetable createVegetable() {
-        System.out.print("Введите тип корнеплода: ");
+        input.showMessage("Введите тип корнеплода: ");
         String type = scanner.nextLine();
-        System.out.print("Введите вес корнеплода: ");
+        input.showMessage("Введите вес корнеплода: ");
         double weight = scanner.nextDouble();
         scanner.nextLine(); // consume newline
-        System.out.print("Введите цвет корнеплода: ");
+        input.showMessage("Введите цвет корнеплода: ");
         String color = scanner.nextLine();
 
         return new Vegetable.Builder()

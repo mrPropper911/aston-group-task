@@ -5,6 +5,8 @@ package by.aston.utils;
  */
 public class NumberUtils {
 
+    //todo лишний код
+
     /**
      * Проверяет, является ли объект четным числом.
      *
@@ -16,5 +18,18 @@ public class NumberUtils {
             return ((Number) obj).intValue() % 2 == 0;
         }
         return false;
+    }
+
+    //todo убрать эту реализацию
+    public static int parseInt(String value, int defaultValue) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue; //todo need throw new exception
+        }
+    }
+
+    public static int parseInt(String value) throws NumberFormatException{
+        return Integer.parseInt(value);
     }
 }

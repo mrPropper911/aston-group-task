@@ -18,6 +18,11 @@ public class ConsoleInput implements DataInput {
     }
 
     @Override
+    public void showErrorMessage(String message) {
+        System.err.println(message);
+    }
+
+    @Override
     public String readLine() {
         return scanner.nextLine();
     }

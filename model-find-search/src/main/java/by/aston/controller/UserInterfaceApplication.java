@@ -5,10 +5,8 @@ import by.aston.model.Book;
 import by.aston.model.Car;
 import by.aston.model.Vegetable;
 import by.aston.service.CustomCollections;
-import by.aston.view.DataInput;
-import by.aston.view.FileInput;
-import by.aston.view.KeyboardInput;
-import by.aston.view.RandomInput;
+import by.aston.utils.NumberUtils;
+import by.aston.view.*;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,20 +14,16 @@ import java.util.List;
 import java.util.Scanner;
 
 import static by.aston.utils.NumberUtils.isEven;
+import static by.aston.utils.NumberUtils.parseInt;
 
 public class UserInterfaceApplication {
 
     private final DataInput input;
-    private final KeyboardInput keyboardInput;
-    private final FileInput fileInput = new FileInput();
-    private final RandomInput randomInput = new RandomInput();
     private List<Object> currentData = Collections.emptyList();
 
     public UserInterfaceApplication(DataInput input) {
         this.input = input;
-        this.keyboardInput = new KeyboardInput(new Scanner(System.in));
     }
-
 
     public void run() {
         boolean running = true;
@@ -58,65 +52,9 @@ public class UserInterfaceApplication {
         }
     }
 
-    private void displayInfo() {
-        if (currentData == null || currentData.isEmpty()) {
-            input.showMessage("Нет данных для отображения.");
-        } else {
-            input.showMessage("Текущие данные:");
-            currentData.forEach(data -> input.showMessage(data.toString()));
-        }
-    }
-
-    private List<Object> chooseInputMethod(String type) {
-        input.showMessage("Выберите способ ввода данных:");
-        input.showMessage("1. Из файла");
-        input.showMessage("2. С клавиатуры");
-        input.showMessage("3. Случайная генерация");
-
-        int choice = parseInt(input.readLine(), -1);
-        switch (choice) {
-            case 1 -> {
-                return fileInput.readData(type);
-            }
-            case 2 -> {
-                input.showMessage("Введите количество элементов: ");
-                int count = parseInt(input.readLine(), 0);
-                return keyboardInput.readData(type, count);
-            }
-            case 3 -> {
-                input.showMessage("Введите количество элементов: ");
-                int count = parseInt(input.readLine(), 0);
-                return randomInput.generateData(type, count);
-            }
-            default -> {
-                input.showMessage("Неверный выбор.");
-                return null;
-            }
-        }
-    }
-
     private void handleInput() {
-        input.showMessage("Выберите тип данных:");
-        input.showMessage("1. Car");
-        input.showMessage("2. Book");
-        input.showMessage("3. RootVegetable");
-
-        String type = switch (parseInt(input.readLine(), -1)) {
-            case 1 -> "Car";
-            case 2 -> "Book";
-            case 3 -> "RootVegetable";
-            default -> {
-                input.showMessage("Неверный выбор.");
-                yield null;
-            }
-        };
-
-        if (type == null) return;
-
-        currentData = chooseInputMethod(type);
-        if (currentData != null) {
-            input.showMessage("Данные успешно загружены.");
-        }
+        var collectionLoader = new CollectionLoader(input);
+        currentData = collectionLoader.getObjectList();
     }
 
     private void handleSort() {
@@ -217,6 +155,67 @@ public class UserInterfaceApplication {
         }
     }
 
+    private void displayInfo() {
+        if (currentData == null || currentData.isEmpty()) {
+            input.showMessage("Нет данных для отображения.");
+        } else {
+            input.showMessage("Текущие данные:");
+            currentData.forEach(data -> input.showMessage(data.toString()));
+        }
+    }
+
+//    private List<Object> chooseInputMethod(String type) {
+//        input.showMessage("Выберите способ ввода данных:");
+//        input.showMessage("1. Из файла");
+//        input.showMessage("2. С клавиатуры");
+//        input.showMessage("3. Случайная генерация");
+//
+//        int choice = parseInt(input.readLine(), -1);
+//        switch (choice) {
+//            case 1 -> {
+//                return fileInput.readData(type);
+//            }
+//            case 2 -> {
+//                var keyboardInput = new KeyboardInput(input);
+//                return keyboardInput.getObjectList();
+//            }
+//            case 3 -> {
+//                input.showMessage("Введите количество элементов: ");
+//                int count = parseInt(input.readLine(), 0);
+//                return randomInput.generateData(type, count);
+//            }
+//            default -> {
+//                input.showMessage("Неверный выбор.");
+//                return null;
+//            }
+//        }
+//    }
+
+//    private void handleInput() {
+//        input.showMessage("Выберите тип данных:");
+//        input.showMessage("1. Car");
+//        input.showMessage("2. Book");
+//        input.showMessage("3. RootVegetable");
+//
+//        String type = switch (parseInt(input.readLine(), -1)) {
+//            case 1 -> "Car";
+//            case 2 -> "Book";
+//            case 3 -> "RootVegetable";
+//            default -> {
+//                input.showMessage("Неверный выбор.");
+//                yield null;
+//            }
+//        };
+//
+//        if (type == null) return;
+//
+//        currentData = chooseInputMethod(type);
+//        if (currentData != null) {
+//            input.showMessage("Данные успешно загружены.");
+//        }
+//    }
+
+
     private Object parseKey(String key, Class<?> clazz) {
         try {
             if (clazz == Car.class) {
@@ -230,13 +229,5 @@ public class UserInterfaceApplication {
             input.showMessage("Ошибка преобразования ключа: " + e.getMessage());
         }
         return null;
-    }
-
-    private int parseInt(String value, int defaultValue) {
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
     }
 }
