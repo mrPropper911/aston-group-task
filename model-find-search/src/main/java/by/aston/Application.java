@@ -1,13 +1,13 @@
 package by.aston;
 
-import by.aston.controller.UserInterfaceApplication;
-import by.aston.view.impl.ConsoleInput;
-
-import java.util.Scanner;
+import by.aston.view.Simulation;
 
 public class Application {
     public static void main(String[] args) {
-        var ui = new UserInterfaceApplication(new ConsoleInput(new Scanner(System.in)));
+        // var ui = new UserInterfaceApplication(new Simulation(new Scanner(System.in)));
+        // ui.run();
+        var ui = new Simulation();
         ui.run();
+
     }
 }
