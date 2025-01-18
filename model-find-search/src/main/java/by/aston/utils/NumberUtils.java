@@ -30,6 +30,10 @@ public class NumberUtils {
     }
 
     public static int parseInt(String value) throws NumberFormatException{
-        return Integer.parseInt(value);
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Ошибка ввода. Необходимо ввести числовое значение: " + value);
+        }
     }
 }

@@ -113,7 +113,7 @@ public class CollectionLoader {
             //todo
 //            return randomCollection;
         } catch (NumberFormatException exception) {
-            input.showErrorMessage("Ошибка ввода. Необходимо ввести числовое значение");
+            input.showErrorMessage(exception.getMessage());
         }
         return Collections.emptyList();
     }

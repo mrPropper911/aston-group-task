@@ -3,6 +3,7 @@ package by.aston.view;
 import by.aston.model.Book;
 import by.aston.model.Car;
 import by.aston.model.Vegetable;
+import by.aston.utils.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,9 +12,8 @@ import java.util.Scanner;
 
 public class KeyboardInput {
 
-    public Scanner scanner = new Scanner(System.in);
-
     private final DataInput input;
+    public Scanner scanner = new Scanner(System.in);
 
     public KeyboardInput(DataInput input) {
         this.input = input;
@@ -22,58 +22,71 @@ public class KeyboardInput {
     //todo userDialogInit перенести текст
 
     public <T> List<T> getObjectList() {
-        input.showMessage("Выберите тип коллекции для создания:");
-        input.showMessage("1. Автомобили");
-        input.showMessage("2. Книги");
-        input.showMessage("3. Корнеплоды");
-        input.showMessage("4. Выход");
+        try {
+            input.showMessage("Выберите тип коллекции для создания:");
+            input.showMessage("1. Автомобили");
+            input.showMessage("2. Книги");
+            input.showMessage("3. Корнеплоды");
+            input.showMessage("4. Выход");
 
-        int choice = scanner.nextInt();
+            int userChoice = NumberUtils.parseInt(input.readLine());
 
-        switch (choice) {
-            case 1:
-                inputFromConsole(Car.class);
-                break;
-            case 2:
-                inputFromConsole(Book.class);
-                break;
-            case 3:
-                inputFromConsole(Vegetable.class);
-                break;
-            case 4:
-                input.showMessage("Выход из программы.");
-                return Collections.emptyList();
-            default:
-                input.showMessage("Неверный выбор. Пожалуйста, попробуйте снова.");
-                getObjectList(); // Повторный вызов для нового выбора
+            //todo заменить switch
+            switch (userChoice) {
+                case 1:
+                    inputFromConsole(Car.class);
+                    break;
+                case 2:
+                    inputFromConsole(Book.class);
+                    break;
+                case 3:
+                    inputFromConsole(Vegetable.class);
+                    break;
+                case 4:
+                    input.showMessage("Выход из программы.");
+                    return Collections.emptyList();
+                default:
+                    input.showErrorMessage("Неверный выбор. Пожалуйста, попробуйте снова.");
+                    getObjectList(); // Повторный вызов для нового выбора
+            }
+        } catch (NumberFormatException exception) {
+            input.showErrorMessage(exception.getMessage());
         }
+
         //todo
         return Collections.emptyList();
     }
 
     private <T> List<T> inputFromConsole(Class<T> clazz) {
-        input.showMessage("Введите количество элементов для создания: ");
-        int count = scanner.nextInt();
-        scanner.nextLine();
         List<T> collection = new ArrayList<>();
+        try {
+            input.showMessage("Введите количество элементов для создания: ");
+            int count = NumberUtils.parseInt(input.readLine());
+            input.readLine();
 
-        for (int i = 0; i < count; i++) {
-            try {
-                T obj = createObject(clazz);
-                if (obj != null) {
-                    collection.add(obj);
+            for (int i = 0; i < count; i++) {
+                try {
+                    T obj = createObject(clazz);
+                    if (obj != null) {
+                        collection.add(obj);
+                    }
+                } catch (IllegalArgumentException e) {
+                    input.showMessage("Ошибка при создании объекта: " + e.getMessage());
+                    i--; // Уменьшаем счетчик, чтобы повторить ввод для этого объекта
+                } catch (Exception e) {
+                    input.showMessage("Произошла ошибка: " + e.getMessage());
+                    scanner.nextLine(); // Очистка ввода
                 }
-            } catch (IllegalArgumentException e) {
-                input.showMessage("Ошибка при создании объекта: " + e.getMessage());
-                i--; // Уменьшаем счетчик, чтобы повторить ввод для этого объекта
-            } catch (Exception e) {
-                input.showMessage("Произошла ошибка: " + e.getMessage());
-                scanner.nextLine(); // Очистка ввода
             }
+
+            input.showMessage("Созданные объекты: " + collection);
+            return collection;
+
+        } catch (NumberFormatException exception) {
+            input.showErrorMessage(exception.getMessage());
         }
 
-        input.showMessage("Созданные объекты: " + collection);
-        return collection;
+        return Collections.emptyList();
     }
 
     private <T> T createObject(Class<T> clazz) {
