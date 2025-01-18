@@ -3,16 +3,23 @@ package by.aston.model;
 import by.aston.utils.NumberUtils;
 import by.aston.validator.BookValidator;
 import by.aston.view.DataInput;
+import by.aston.view.RandomObjectGenerator;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 public class Book implements Serializable, Comparable<Book>, ObjectBuilder<Book> {
+    private final static String PATH_RANDOM_BOOK_AUTHORS = "randomazers/names.txt";
+    private final static String PATH_RANDOM_BOOK_TITLES = "randomazers/titles.txt";
     private static final long SerialVersionUID = 42L;
-    private final String title;
-    private final String author;
-    private final Integer numberPages;
+    private String title;
+    private String author;
+    private Integer numberPages;
+
+    public Book() {}
 
     Book(Builder builder){
         this.numberPages = builder.numberPages;
@@ -93,9 +100,17 @@ public class Book implements Serializable, Comparable<Book>, ObjectBuilder<Book>
     }
 
     @Override
-    public String write(Object obj) {
-        Book book = (Book) obj;
-        return "Book" + book.getTitle() + "," + book.getAuthor() + "," + book.getNumberPages();
+    public Book createRandomObject() {
+        Random random = new Random();
+        List<String> randomAuthorList = RandomObjectGenerator
+                .getRandomObjectsByCount(PATH_RANDOM_BOOK_AUTHORS, 1);
+        List<String> randomTitleList = RandomObjectGenerator
+                .getRandomObjectsByCount(PATH_RANDOM_BOOK_TITLES, 1);
+        return new Book.Builder()
+                .author(randomAuthorList.get(0))
+                .title(randomTitleList.get(0))
+                .numberPages(random.nextInt(500) + 100)
+                .build();
     }
 
     @Override

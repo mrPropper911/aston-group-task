@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface ObjectBuilder<T> {
     Optional<T> buildFromInput(DataInput input);
-    String write(Object obj);//todo delete?
+    T createRandomObject();
     Integer getValue();
 }

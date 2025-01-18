@@ -3,16 +3,23 @@ package by.aston.model;
 import by.aston.utils.NumberUtils;
 import by.aston.validator.VegetableValidator;
 import by.aston.view.DataInput;
+import by.aston.view.RandomObjectGenerator;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBuilder<Vegetable> {
+    private final static String PATH_RANDOM_COLORS = "randomazers/colors.txt";
+    private final static String PATH_RANDOM_VEGETABLES_NAME = "randomazers/vegetables.txt";
     private static final long SerialVersionUID = 42L;
-    private final String type;
-    private final Double weight;
-    private final String color;
+    private String type;
+    private Double weight;
+    private String color;
+
+    public Vegetable() {}
 
     public Vegetable(Builder builder) {
         this.weight = (builder.weight);
@@ -98,10 +105,17 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
     }
 
     @Override
-    public String write(Object obj) {
-        Vegetable vegetable = (Vegetable) obj;
-        return "Vegetable:" + vegetable.getType() + ","
-                + vegetable.getWeight() + "," + vegetable.getColor();
+    public Vegetable createRandomObject() {
+        Random random = new Random();
+        List<String> randomNamesList = RandomObjectGenerator
+                .getRandomObjectsByCount(PATH_RANDOM_VEGETABLES_NAME, 1);
+        List<String> randomColorsList = RandomObjectGenerator
+                .getRandomObjectsByCount(PATH_RANDOM_COLORS, 1);
+        return new Vegetable.Builder()
+                .type(randomNamesList.get(0))
+                .weight(random.nextDouble() * 10)
+                .color(randomColorsList.get(0))
+                .build();
     }
 
     @Override

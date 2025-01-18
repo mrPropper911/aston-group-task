@@ -3,16 +3,22 @@ package by.aston.model;
 import by.aston.utils.NumberUtils;
 import by.aston.validator.CarValidator;
 import by.aston.view.DataInput;
+import by.aston.view.RandomObjectGenerator;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 public class Car implements Serializable, Comparable<Car>, ObjectBuilder<Car> {
+    private final static String PATH_RANDOM_CAR_MODELS = "randomazers/models.txt";
     private static final long SerialVersionUID = 42L;
-    private final Integer power;
-    private final String model;
-    private final Integer yearRelease;
+    private Integer power;
+    private String model;
+    private Integer yearRelease;
+
+    public Car() {}
 
     public Car(Builder builder) {
         this.power = builder.power;
@@ -96,9 +102,15 @@ public class Car implements Serializable, Comparable<Car>, ObjectBuilder<Car> {
     }
 
     @Override
-    public String write(Object obj) {
-        Car car = (Car) obj;
-        return "Car:" + car.getPower() + "," + car.getModel() + "," + car.getYearRelease();
+    public Car createRandomObject() {
+        Random random = new Random();
+        List<String> stringModelList = RandomObjectGenerator
+                .getRandomObjectsByCount(PATH_RANDOM_CAR_MODELS, 1);
+        return new Car.Builder()
+                .model(stringModelList.get(0))
+                .power(random.nextInt(300) + 100)
+                .yearRelease(random.nextInt(100) + 1886)
+                .build();
     }
 
     @Override

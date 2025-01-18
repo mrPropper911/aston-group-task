@@ -1,8 +1,6 @@
 package by.aston.view;
 
-import by.aston.model.Book;
-import by.aston.model.Car;
-import by.aston.model.Vegetable;
+import by.aston.model.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,54 +13,19 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class RandomObjectGenerator {
-
-    private static final Random random = new Random();
-    private final static String PATH_BOOK_AUTHORS = "randomazers/names.txt";
-    private final static String PATH_BOOK_TITLES = "randomazers/titles.txt";
-    private final static String PATH_CAR_MODELS = "randomazers/models.txt";
-    private final static String PATH_CAR_COLORS = "randomazers/colors.txt";
-    private final static String PATH_VEGETABLES_NAME = "randomazers/vegetables.txt";
-
     public static <T> List<T> getObjectList(Class<T> clazz, int count) {
         List<T> collection = new ArrayList<>();
+        ObjectBuilderFactory factory = new ObjectBuilderFactory();
+        ObjectBuilder<T> objectBuilder = factory.getFactory(clazz);
 
-        if (clazz == Car.class) {
-            List<String> stringModelList = getRandomObjectsByCount(PATH_CAR_MODELS, count);
-            for (var i = 0; i < count; i++) {
-                Car car = new Car.Builder()
-                        .model(stringModelList.get(i))
-                        .power(random.nextInt(300) + 100)
-                        .yearRelease(random.nextInt(100) + 1886)
-                        .build();
-                collection.add(clazz.cast(car));
-            }
-        } else if (clazz == Book.class) {
-            List<String> randomAuthorList = getRandomObjectsByCount(PATH_BOOK_AUTHORS, count);
-            List<String> randomTitleList = getRandomObjectsByCount(PATH_BOOK_TITLES, count);
-            for (var i = 0; i < count; i++) {
-                Book book = new Book.Builder()
-                        .author(randomAuthorList.get(i))
-                        .title(randomTitleList.get(i))
-                        .numberPages(random.nextInt(500) + 100)
-                        .build();
-                collection.add(clazz.cast(book));
-            }
-        } else if (clazz == Vegetable.class) {
-            List<String> randomNamesList = getRandomObjectsByCount(PATH_VEGETABLES_NAME, count);
-            List<String> randomColorsList = getRandomObjectsByCount(PATH_CAR_COLORS, count);
-            for (var i = 0; i < count; i++) {
-                Vegetable vegetable = new Vegetable.Builder()
-                        .type(randomNamesList.get(i))
-                        .weight(random.nextDouble() * 10)
-                        .color(randomColorsList.get(i))
-                        .build();
-                collection.add(clazz.cast(vegetable));
-            }
+        for (var i = 0; i < count; i++){
+            collection.add(objectBuilder.createRandomObject());
         }
         return collection;
     }
 
-    private static List<String> getRandomObjectsByCount(String filePath, int count) {
+    public static List<String> getRandomObjectsByCount(String filePath, int count) {
+        var random = new Random();
         List<String> stringList = loadDataForRandom(filePath);
         return random.ints(0, stringList.size())
                 .limit(count)
