@@ -6,12 +6,12 @@ import by.aston.view.DataInput;
 import by.aston.view.RandomObjectGenerator;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
-public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBuilder<Vegetable> {
+public class Vegetable implements Serializable, Comparable<Vegetable>,
+        ObjectBuilder<Vegetable> {
     private final static String PATH_RANDOM_COLORS = "randomazers/colors.txt";
     private final static String PATH_RANDOM_VEGETABLES_NAME = "randomazers/vegetables.txt";
     private static final long SerialVersionUID = 42L;
@@ -19,7 +19,8 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
     private Double weight;
     private String color;
 
-    public Vegetable() {}
+    public Vegetable() {
+    }
 
     public Vegetable(Builder builder) {
         this.weight = (builder.weight);
@@ -44,7 +45,8 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vegetable vegetable = (Vegetable) o;
-        return Objects.equals(type, vegetable.type) && Objects.equals(weight, vegetable.weight)
+        return Objects.equals(type, vegetable.type)
+                && Objects.equals(weight, vegetable.weight)
                 && Objects.equals(color, vegetable.color);
     }
 
@@ -54,39 +56,39 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
     }
 
     @Override
-    public java.lang.String toString() {
+    public String toString() {
         return "Корнеплод: " + "тип - " + type + ", вес - "
                 + weight + ", цвет - " + color;
     }
 
     @Override
     public int compareTo(Vegetable vegetable) {
-        int typesCompareResult = this.type.compareTo(vegetable.type);
+        var typesCompareResult = this.type.compareTo(vegetable.type);
         if (typesCompareResult != 0) {
             return typesCompareResult;
         }
 
-        int colorsCompareResult = this.color.compareTo(vegetable.color);
+        var colorsCompareResult = this.color.compareTo(vegetable.color);
         if (colorsCompareResult != 0) {
             return colorsCompareResult;
         }
 
-        return Double.compare(this.weight - vegetable.weight, 0);
+        return Double.compare(this.weight, vegetable.weight);
     }
 
     @Override
     public Optional<Vegetable> buildFromInput(DataInput input) {
         try {
             input.showMessage("Введите тип корнеплода: ");
-            String type = input.readLine();
+            var type = input.readLine();
 
             input.showMessage("Введите вес корнеплода: ");
-            double weight = NumberUtils.parseDouble(input.readLine());
+            var weight = NumberUtils.parseDouble(input.readLine());
 
             input.showMessage("Введите цвет корнеплода: ");
-            String color = input.readLine();
+            var color = input.readLine();
 
-            Vegetable vegetable = new Builder()
+            var vegetable = new Builder()
                     .type(type)
                     .weight(weight)
                     .color(color)
@@ -96,9 +98,11 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
             return Optional.of(vegetable);
 
         } catch (NumberFormatException exception) {
-            input.showErrorMessage("Ошибка формата числа: " + exception.getMessage());
+            input.showErrorMessage("Ошибка формата числа: " +
+                    exception.getMessage());
         } catch (IllegalArgumentException exception) {
-            input.showErrorMessage("Ошибка валидации: " + exception.getMessage());
+            input.showErrorMessage("Ошибка валидации: " +
+                    exception.getMessage());
         }
 
         return Optional.empty();
@@ -106,10 +110,10 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
 
     @Override
     public Vegetable createRandomObject() {
-        Random random = new Random();
-        List<String> randomNamesList = RandomObjectGenerator
+        var random = new Random();
+        var randomNamesList = RandomObjectGenerator
                 .getRandomObjectsByCount(PATH_RANDOM_VEGETABLES_NAME, 1);
-        List<String> randomColorsList = RandomObjectGenerator
+        var randomColorsList = RandomObjectGenerator
                 .getRandomObjectsByCount(PATH_RANDOM_COLORS, 1);
         return new Vegetable.Builder()
                 .type(randomNamesList.get(0))

@@ -6,19 +6,20 @@ import by.aston.view.DataInput;
 import by.aston.view.RandomObjectGenerator;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
-public class Car implements Serializable, Comparable<Car>, ObjectBuilder<Car> {
+public class Car implements Serializable, Comparable<Car>,
+        ObjectBuilder<Car> {
     private final static String PATH_RANDOM_CAR_MODELS = "randomazers/models.txt";
     private static final long SerialVersionUID = 42L;
     private Integer power;
     private String model;
     private Integer yearRelease;
 
-    public Car() {}
+    public Car() {
+    }
 
     public Car(Builder builder) {
         this.power = builder.power;
@@ -43,7 +44,8 @@ public class Car implements Serializable, Comparable<Car>, ObjectBuilder<Car> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return Objects.equals(power, car.power) && Objects.equals(model, car.model) && Objects.equals(yearRelease, car.yearRelease);
+        return Objects.equals(power, car.power) && Objects.equals(model, car.model)
+                && Objects.equals(yearRelease, car.yearRelease);
     }
 
     @Override
@@ -59,32 +61,32 @@ public class Car implements Serializable, Comparable<Car>, ObjectBuilder<Car> {
 
     @Override
     public int compareTo(Car car) {
-        int modelsCompareResult = this.model.compareTo(car.model);
+        var modelsCompareResult = this.model.compareTo(car.model);
         if (modelsCompareResult != 0) {
             return modelsCompareResult;
         }
 
-        int powersCompareResult = this.power - car.power;
+        var powersCompareResult = Integer.compare(this.power, car.power);
         if (powersCompareResult != 0) {
             return powersCompareResult;
         }
 
-        return this.yearRelease - car.yearRelease;
+        return Integer.compare(this.yearRelease, car.yearRelease);
     }
 
     @Override
     public Optional<Car> buildFromInput(DataInput input) {
         try {
             input.showMessage("Введите модель автомобиля: ");
-            String model = input.readLine();
+            var model = input.readLine();
 
             input.showMessage("Введите мощность автомобиля: ");
-            int power = NumberUtils.parseInt(input.readLine());
+            var power = NumberUtils.parseInt(input.readLine());
 
             input.showMessage("Введите год производства автомобиля: ");
-            int year = NumberUtils.parseInt(input.readLine());
+            var year = NumberUtils.parseInt(input.readLine());
 
-            Car car = new Builder()
+            var car = new Builder()
                     .model(model)
                     .power(power)
                     .yearRelease(year)
@@ -103,8 +105,8 @@ public class Car implements Serializable, Comparable<Car>, ObjectBuilder<Car> {
 
     @Override
     public Car createRandomObject() {
-        Random random = new Random();
-        List<String> stringModelList = RandomObjectGenerator
+        var random = new Random();
+        var stringModelList = RandomObjectGenerator
                 .getRandomObjectsByCount(PATH_RANDOM_CAR_MODELS, 1);
         return new Car.Builder()
                 .model(stringModelList.get(0))

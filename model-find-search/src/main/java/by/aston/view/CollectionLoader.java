@@ -20,7 +20,7 @@ public class CollectionLoader {
     public List<?> getObjectList() {
         while (true) {
             input.showMessage("""
-                    Выберите действие:
+                    \nВыберите действие:
                     1. Создать коллекцию объектов вручную.
                     2. Сгенерировать коллекцию случайных объектов.
                     3. Считать коллекцию из файла.
@@ -104,14 +104,16 @@ public class CollectionLoader {
 
     private <T> List<T> generateAndDisplayCollection(Class<T> clazz, int objectCount) {
         List<T> collection = RandomObjectGenerator.getObjectList(clazz, objectCount);
-        input.showMessage("Случайно сгенерированная коллекция: " + collection);
+        input.showMessage("Случайно сгенерированная коллекция: ");
+        collection.forEach(data -> input.showMessage(data.toString()));
         return collection;
     }
 
     private <T> List<T> readAndDisplayCollection(String filePath, Class<T> clazz) {
         try {
             List<T> collection = FileHandler.readCollectionFromFile(filePath, clazz);
-            input.showMessage("Считанная из файла коллекция: " + collection);
+            input.showMessage("Считанная из файла коллекция: ");
+            collection.forEach(data -> input.showMessage(data.toString()));
             return collection;
         } catch (IOException | ClassNotFoundException exception) {
             input.showErrorMessage("При загрузки коллекции возникла ошибка: " +
@@ -123,7 +125,7 @@ public class CollectionLoader {
     private int userCollectionChoice() {
         try {
             input.showMessage("""
-                    Выберите тип коллекции для чтения:
+                    \nВыберите тип коллекции для чтения:
                     1. Автомобили
                     2. Книги
                     3. Корнеплоды

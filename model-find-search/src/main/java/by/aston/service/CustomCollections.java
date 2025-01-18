@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CustomCollections {
-
     /**
      * Сортировка с использованием естественного порядка (Comparable)
      *
@@ -14,9 +13,25 @@ public class CustomCollections {
      */
     public static <T extends Comparable<? super T>> void sort(List<T> list) {
         if (list == null) {
-            throw new IllegalArgumentException("List can not be null");
+            throw new IllegalArgumentException("Список не может быть пустым.");
         }
         sort(list, Comparator.naturalOrder());
+    }
+
+    /**
+     * Сортировка с использованием wildcard и естественного порядка (Comparable)
+     *
+     * @param list список для сортировки
+     * @throws IllegalArgumentException если список равен null
+     */
+    public static void sortWildcard(List<?> list){
+        if (list == null) {
+            throw new IllegalArgumentException("Список не может быть пустым.");
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Comparable<Object>> comparableList = (List<Comparable<Object>>) list;
+        comparableList.sort(Comparator.naturalOrder());
     }
 
     /**
@@ -28,7 +43,7 @@ public class CustomCollections {
      */
     public static <T> void sort(List<T> list, Comparator<? super T> comparator) {
         if (list == null || comparator == null) {
-            throw new IllegalArgumentException("List and comparator can not be null");
+            throw new IllegalArgumentException("Список и компаратор не может быть пустым.");
         }
         shellSort(list, comparator);
     }
@@ -68,7 +83,7 @@ public class CustomCollections {
      * @return индекс элемента в списке, в случае если не найден -1
      * @throws IllegalArgumentException если список, элемент поиска или компаратор равен null
      */
-    public static <T> int searchBinary(List<? extends T> list,
+    public static <T> int searchBinary(List<T> list,
                                        T key, Comparator<? super T> comparator) {
         if (list == null || key == null || comparator == null) {
             throw new IllegalArgumentException("List, key and comparator can not be null");

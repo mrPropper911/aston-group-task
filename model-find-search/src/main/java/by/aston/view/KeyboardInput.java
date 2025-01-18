@@ -20,7 +20,7 @@ public class KeyboardInput {
     public List<?> getObjectList() {
         try {
             input.showMessage("""
-                    Выберите тип коллекции для создания:
+                    \nВыберите тип коллекции для создания:
                     1. Автомобили
                     2. Книги
                     3. Корнеплоды
@@ -31,7 +31,8 @@ public class KeyboardInput {
             var userCountOfObjectChoice = NumberUtils.parseInt(input.readLine());
 
             List<?> objectsList = generateObjectList(userObjectChoice, userCountOfObjectChoice);
-            input.showMessage("Созданные объекты: " + objectsList);
+            input.showMessage("Созданные объекты: ");
+            objectsList.forEach(data -> input.showMessage(data.toString()));
 
             return objectsList;
 

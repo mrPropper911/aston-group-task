@@ -46,4 +46,17 @@ public class FileHandler {
         }
     }
 
+    public static <T> void writeCollectionToFileWithAppend(String filePath, List<T> collection) throws IOException {
+        File file = new File(filePath);
+
+        if (file.exists() && !file.canWrite()) {
+            throw new IOException("Файл недоступен для записи: " + filePath);
+        }
+
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file, true))) {
+            for (T object : collection) {
+                outputStream.writeObject(object);
+            }
+        }
+    }
 }

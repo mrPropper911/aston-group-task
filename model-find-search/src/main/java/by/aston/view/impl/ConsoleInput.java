@@ -5,7 +5,6 @@ import by.aston.view.DataInput;
 import java.util.Scanner;
 
 public class ConsoleInput implements DataInput {
-
     private final Scanner scanner;
 
     public ConsoleInput(Scanner scanner) {
