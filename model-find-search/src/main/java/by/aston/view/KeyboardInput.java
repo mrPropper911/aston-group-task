@@ -17,7 +17,7 @@ public class KeyboardInput {
         this.input = input;
     }
 
-    public <T> List<T> getObjectList() {
+    public List<?> getObjectList() {
         try {
             input.showMessage("""
                     Выберите тип коллекции для создания:
@@ -30,7 +30,7 @@ public class KeyboardInput {
             input.showMessage("Введите количество элементов для создания: ");
             var userCountOfObjectChoice = NumberUtils.parseInt(input.readLine());
 
-            List<T> objectsList = generateObjectList(userObjectChoice, userCountOfObjectChoice);
+            List<?> objectsList = generateObjectList(userObjectChoice, userCountOfObjectChoice);
             input.showMessage("Созданные объекты: " + objectsList);
 
             return objectsList;

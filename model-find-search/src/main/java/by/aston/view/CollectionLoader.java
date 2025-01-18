@@ -17,9 +17,8 @@ public class CollectionLoader {
         this.input = input;
     }
 
-    public <T> List<T> getObjectList() {
+    public List<?> getObjectList() {
         RandomObjectGenerator randomObjectGenerator = new RandomObjectGenerator();
-        FileHandler fileHandler = new FileHandler();
 
         while (true) {
             //todo записать это метод inputOfData?
@@ -42,7 +41,7 @@ public class CollectionLoader {
                     return generateRandomCollection(randomObjectGenerator);//todo
                 }
                 case 3 -> {
-                    return readCollectionFromFile(fileHandler);
+                    return readCollectionFromFile();
                 }
                 case 5 -> {
                     return Collections.emptyList();
@@ -121,60 +120,45 @@ public class CollectionLoader {
         return Collections.emptyList();
     }
 
-    private <T> List<T> readCollectionFromFile(FileHandler fileHandler) {
+    private List<?> readCollectionFromFile() {
+        input.showMessage("""
+                Выберите тип коллекции для чтения:
+                1. Автомобили
+                2. Книги
+                3. Корнеплоды
+                """);
+        var userObjectChoice = NumberUtils.parseInt(input.readLine());
+
         input.showMessage("Введите путь к файлу для чтения: ");
         var readFilePath = input.readLine();
 
-        input.showMessage("Введите тип объекта (1 - Машина, 2 - Книга, 3 - Корнеплоды): ");
-        var readType = NumberUtils.parseInt(input.readLine());
-        List<?> collection = null;
-
-        try {
-            switch (readType) {
-                case 1:
-                    collection = fileHandler.readCollectionFromFile(readFilePath, Car.class);
-                    input.showMessage("Считанная коллекция автомобилей: " + collection);
-                    break;
-                case 2:
-                    collection = fileHandler.readCollectionFromFile(readFilePath, Book.class);
-                    input.showMessage("Считанная коллекция книг: " + collection);
-                    break;
-                case 3:
-                    collection = fileHandler.readCollectionFromFile(readFilePath, Vegetable.class);
-                    input.showMessage("Считанная коллекция корнеплодов: " + collection);
-                    break;
-                default:
-                    input.showMessage("Неверный тип объекта.");
-                    break;
+        switch (userObjectChoice) {
+            case 1 -> {
+                return readAndDisplayCollection(readFilePath, Car.class);
             }
-        } catch (IOException | ClassNotFoundException e) {
-            input.showMessage("Ошибка при чтении из файла: " + e.getMessage());
+            case 2 -> {
+                return readAndDisplayCollection(readFilePath, Book.class);
+            }
+            case 3 -> {
+                return readAndDisplayCollection(readFilePath, Vegetable.class);
+            }
+            default -> {
+                input.showErrorMessage("Неверный выбор типа коллекции.");
+                return Collections.emptyList();
+            }
         }
-//        return collection;//todo
-        return Collections.emptyList();
     }
 
-//    private void writeCollectionToFile(FileHandler fileHandler, KeyboardInput keyboardInput,
-//                                       List<Car> carCollection, List<Book> bookCollection,
-//                                       List<Vegetable> vegetableCollection) {
-//        input.showMessage("Введите путь к файлу для записи: ");
-//        String writeFilePath = input.readLine();
-//
-//        try {
-//            if (carCollection != null && !carCollection.isEmpty()) {
-//                fileHandler.writeCollectionToFile(writeFilePath, carCollection);
-//                input.showMessage("Коллекция автомобилей записана в файл.");
-//            } else if (bookCollection != null && !bookCollection.isEmpty()) {
-//                fileHandler.writeCollectionToFile(writeFilePath, bookCollection);
-//                input.showMessage("Коллекция книг записана в файл.");
-//            } else if (vegetableCollection != null && !vegetableCollection.isEmpty()) {
-//                fileHandler.writeCollectionToFile(writeFilePath, vegetableCollection);
-//                input.showMessage("Коллекция корнеплодов записана в файл.");
-//            } else {
-//                input.showMessage("Нет коллекции для записи.");
-//            }
-//        } catch (IOException e) {
-//            input.showMessage("Ошибка при записи в файл: " + e.getMessage());
-//        }
-//    }
+    private <T> List<T> readAndDisplayCollection(String filePath, Class<T> clazz) {
+        try {
+            List<T> collection = FileHandler.readCollectionFromFile(filePath, clazz);
+            input.showMessage("Считанная из файла коллекция: " + collection);
+            return collection;
+        } catch (IOException | ClassNotFoundException exception) {
+            input.showErrorMessage("При загрузки коллекции возникла ошибка: " + exception.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+
 }

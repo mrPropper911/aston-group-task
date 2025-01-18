@@ -18,16 +18,14 @@ import static by.aston.utils.NumberUtils.parseInt;
 public class UserInterfaceApplication {
 
     private final DataInput input;
-    private List<Object> currentData = Collections.emptyList();
+    private List<?> currentData = Collections.emptyList();
 
     public UserInterfaceApplication(DataInput input) {
         this.input = input;
     }
 
     public void run() {
-        boolean running = true;
-
-        while (running) {
+        while (true) {
             input.showMessage("""
                     Выберите действие:
                     1. Ввести данные.
@@ -47,8 +45,8 @@ public class UserInterfaceApplication {
                 case 4 -> displayInfo();
                 case 5 -> handleSaveToFile();
                 case 6 -> {
-                    running = false;
                     input.showMessage("Выход из программы.");
+                    return;
                 }
                 default -> input.showMessage("Неверный выбор. Попробуйте снова.");
             }
@@ -171,18 +169,20 @@ public class UserInterfaceApplication {
     //todo проверять является ли путь файлом
     private void handleSaveToFile() {
         input.showMessage("Введите путь к файлу для сохранения данных: ");
-        String path = input.readLine();
+        var path = input.readLine();
 
-        if (currentData == null || currentData.isEmpty()){
+        if (currentData == null || currentData.isEmpty()) {
             input.showErrorMessage("Коллекция для сохранения отсутствует.");
         }
 
         try {
             FileHandler.writeCollectionToFile(path, currentData);
         } catch (IOException exception) {
-            input.showErrorMessage("При сохранении коллекции возникла ошибка: "
-                    + exception.getMessage());
+            input.showErrorMessage("При сохранении коллекции возникла ошибка: " +
+                    exception.getMessage());
         }
+
+        input.showMessage("Коллекция успешно сохранена.");
     }
 
 
