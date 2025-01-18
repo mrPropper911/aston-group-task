@@ -1,6 +1,7 @@
-package by.aston.service.further_sort;
+package by.aston.service;
 
 import by.aston.model.Book;
+import by.aston.service.CustomAlgorithm;
 import by.aston.service.CustomCollections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

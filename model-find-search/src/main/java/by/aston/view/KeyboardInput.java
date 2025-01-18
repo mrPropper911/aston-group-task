@@ -100,7 +100,7 @@ public class KeyboardInput {
         return null;
     }
 
-    //todo добавить валидатор на каждое поле
+    //todo удалить
     private Car createCar() {
         input.showMessage("Введите модель автомобиля: ");
         String model = scanner.nextLine();
@@ -116,7 +116,7 @@ public class KeyboardInput {
                 .yearRelease(year)
                 .build();
     }
-
+    //todo удалить
     private Book createBook() {
         input.showMessage("Введите автора книги: ");
         String author = scanner.nextLine();
@@ -132,7 +132,7 @@ public class KeyboardInput {
                 .numberPages(pages)
                 .build();
     }
-
+    //todo удалить
     private Vegetable createVegetable() {
         input.showMessage("Введите тип корнеплода: ");
         String type = scanner.nextLine();

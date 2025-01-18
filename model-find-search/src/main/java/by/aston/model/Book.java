@@ -1,11 +1,14 @@
 package by.aston.model;
 
-import by.aston.service.further_sort.CompareValue;
+import by.aston.utils.NumberUtils;
+import by.aston.validator.BookValidator;
+import by.aston.view.DataInput;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
-public class Book implements Serializable, Comparable<Book>, CompareValue {
+public class Book implements Serializable, Comparable<Book>, ObjectBuilder<Book> {
     private static final long SerialVersionUID = 42L;
     private final String title;
     private final String author;
@@ -57,6 +60,35 @@ public class Book implements Serializable, Comparable<Book>, CompareValue {
         if(titleCompareResult != 0){ return titleCompareResult;}
 
         return this.numberPages - book.numberPages;
+    }
+
+    @Override
+    public Optional<Book> buildFromInput(DataInput input) {
+        try {
+            input.showMessage("Введите автора книги: ");
+            String author = input.readLine();
+
+            input.showMessage("Введите название книги: ");
+            String title = input.readLine();
+
+            input.showMessage("Введите количество страниц книги: ");
+            int pages = NumberUtils.parseInt(input.readLine());
+
+            Book book = new Builder()
+                    .author(author)
+                    .title(title)
+                    .numberPages(pages)
+                    .build();
+
+            BookValidator.validate(book);
+            return Optional.of(book);
+
+        } catch (NumberFormatException exception) {
+            input.showErrorMessage("Ошибка формата числа: " + exception.getMessage());
+        } catch (IllegalArgumentException exception) {
+            input.showErrorMessage("Ошибка валидации: " + exception.getMessage());
+        }
+        return Optional.empty();
     }
 
     @Override

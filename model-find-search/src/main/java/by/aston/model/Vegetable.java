@@ -1,11 +1,14 @@
 package by.aston.model;
 
-import by.aston.service.further_sort.CompareValue;
+import by.aston.utils.NumberUtils;
+import by.aston.validator.VegetableValidator;
+import by.aston.view.DataInput;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
-public class Vegetable implements Serializable, Comparable<Vegetable>, CompareValue {
+public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBuilder<Vegetable> {
     private static final long SerialVersionUID = 42L;
     private final String type;
     private final Double weight;
@@ -60,9 +63,38 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, CompareVa
     }
 
     @Override
+    public Optional<Vegetable> buildFromInput(DataInput input) {
+        try {
+            input.showMessage("Введите тип корнеплода: ");
+            String type = input.readLine();
+
+            input.showMessage("Введите вес корнеплода: ");
+            double weight = NumberUtils.parseDouble(input.readLine());
+
+            input.showMessage("Введите цвет корнеплода: ");
+            String color = input.readLine();
+
+            Vegetable vegetable = new Builder()
+                    .type(type)
+                    .weight(weight)
+                    .color(color)
+                    .build();
+
+            VegetableValidator.validate(vegetable);
+            return Optional.of(vegetable);
+
+        } catch (NumberFormatException exception) {
+            input.showErrorMessage("Ошибка формата числа: " + exception.getMessage());
+        } catch (IllegalArgumentException exception) {
+            input.showErrorMessage("Ошибка валидации: " + exception.getMessage());
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public Integer getValue() {
-        Integer weightInt = (int) Math.ceil(weight);
-        return weightInt;
+        return (int) Math.ceil(weight);
     }
 
     public static class Builder{

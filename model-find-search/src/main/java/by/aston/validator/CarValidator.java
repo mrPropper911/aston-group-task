@@ -2,41 +2,35 @@ package by.aston.validator;
 
 import by.aston.model.Car;
 
+import java.util.Calendar;
+
 public class CarValidator {
-    public static boolean validate(Car car) {
+    public static void validate(Car car) throws IllegalArgumentException {
         if (car == null) {
-            System.out.println("Объект Car не может быть null.");
-            return false;
+            throw new IllegalArgumentException("Объект Car не может быть null.");
         }
-
-        if (!validateModel(car.getModel())) {
-            System.out.println("Некорректная модель машины: " + car.getModel());
-            return false;
-        }
-
-        if (!validatePower(car.getPower())) {
-            System.out.println("Некорректная мощность машины: " + car.getPower());
-            return false;
-        }
-
-        if (!validateYearRelease(car.getYearRelease())) {
-            System.out.println("Некорректный год выпуска машины: " + car.getYearRelease());
-            return false;
-        }
-
-        return true;
+        validateModel(car.getModel());
+        validatePower(car.getPower());
+        validateYearRelease(car.getYearRelease());
     }
 
-    private static boolean validateModel(String model) {
-        return model != null && !model.isBlank();
+    public static void validateModel(String model) throws IllegalArgumentException {
+        if (model == null || model.isBlank()) {
+            throw new IllegalArgumentException("Модель машины не может быть пустой.");
+        }
     }
 
-    private static boolean validatePower(Integer power) {
-        return power != null && power > 0;
+    public static void validatePower(Integer power) throws IllegalArgumentException {
+        if (power == null || power <= 0) {
+            throw new IllegalArgumentException("Мощность машины не может быть пустой или меньше нуля.");
+        }
     }
 
     // первый авто появился в 1886 году, поэтому такая проверка
-    private static boolean validateYearRelease(Integer yearRelease) {
-        return yearRelease != null && yearRelease > 1885 && yearRelease <= java.time.Year.now().getValue();
+    public static void validateYearRelease(Integer yearRelease) throws IllegalArgumentException {
+        int currentYear = java.util.Calendar.getInstance().get(Calendar.YEAR);
+        if (yearRelease == null || yearRelease <= 1885 || yearRelease > currentYear) {
+            throw new IllegalArgumentException("Год выпуска машины должен быть в диапазоне от 1886 до" + currentYear);
+        }
     }
 }

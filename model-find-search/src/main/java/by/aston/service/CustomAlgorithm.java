@@ -1,5 +1,6 @@
-package by.aston.service.further_sort;
+package by.aston.service;
 
+import by.aston.model.ObjectBuilder;
 import by.aston.service.CustomCollections;
 
 import java.util.Comparator;
@@ -15,7 +16,7 @@ public class CustomAlgorithm {
      * @param list список для сортировки
      * @throws IllegalArgumentException если список равен null
      */
-    public static <T extends CompareValue & Comparable<T>> void naturalOrderForEvenSort(List<T> list) {
+    public static <T extends ObjectBuilder & Comparable<T>> void naturalOrderForEvenSort(List<T> list) {
         if (list == null) {
             throw new IllegalArgumentException("List can not be null");
         }
