@@ -11,7 +11,7 @@ public class FileUtils {
     private static final String BOOKS_FILE_PATH;
     private static final String CARS_FILE_PATH;
     private static final String VEGETABLES_FILE_PATH;
-    private static final  String PROPERTIES_FILE_PATH = "src/main/resources/properties.txt";
+    private static final String PROPERTIES_FILE_PATH = "src/main/resources/properties.txt";
 
     static {
         Path path = Paths.get(PROPERTIES_FILE_PATH);
@@ -33,17 +33,20 @@ public class FileUtils {
 
     public static String getVegetablesFilePath() {return VEGETABLES_FILE_PATH;}
 
+    public static String getPropertiesFilePath() {return PROPERTIES_FILE_PATH;}
+
     public static void writeObject(String filePath, Object obj) throws IOException {
         File f = new File(filePath);
         try {
             if (f.length() == 0){
-                var oos = new ObjectOutputStream(new FileOutputStream(filePath, true));
-                oos.writeObject(obj);
-                oos.close();
+                try(var oos = new ObjectOutputStream(new FileOutputStream(filePath, true))) {
+                    oos.writeObject(obj);
+                }
             }
             else {
-                var moos = new MyObjectOutputStream(new FileOutputStream(filePath, true));
-                moos.close();
+                try(var moos = new MyObjectOutputStream(new FileOutputStream(filePath, true))) {
+                    moos.writeObject(obj);
+                }
             }
         }catch (IOException ex){
             System.out.println(ex.getMessage());
@@ -51,29 +54,15 @@ public class FileUtils {
     }
 
     public static <T> void writeCollection(String filePath, List<T> collection) throws IOException {
-        File f = new File(filePath);
-        try{
-            for (T obj : collection){
-                if (f.length() == 0){
-                    var oos = new ObjectOutputStream(new FileOutputStream(filePath, true));
-                    oos.writeObject(obj);
-                    oos.close();
-                }
-                else {
-                    var moos = new MyObjectOutputStream(new FileOutputStream(filePath, true));
-                    moos.writeObject(obj);
-                    moos.close();
-                }
-            }
-        }catch (IOException e){
-            System.out.println(e.getMessage());
+        for (T obj : collection){
+            writeObject(filePath, obj);
         }
     }
 
-    public static Object readObject(String filePath) throws IOException, ClassNotFoundException {
-        Object object = null;
+    public static <T> T readObject(String filePath) throws IOException, ClassNotFoundException {
+        T object = null;
         try(var ois = new ObjectInputStream(new FileInputStream(filePath))){
-            object = ois.readObject();
+            object = (T) ois.readObject();
         }catch (IOException | ClassNotFoundException e){
             System.out.println(e.getMessage());
         }
