@@ -5,13 +5,12 @@ import by.aston.model.Book;
 import by.aston.model.Car;
 import by.aston.model.Vegetable;
 import by.aston.service.CustomCollections;
-import by.aston.utils.NumberUtils;
 import by.aston.view.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
 import static by.aston.utils.NumberUtils.isEven;
 import static by.aston.utils.NumberUtils.parseInt;
@@ -29,12 +28,15 @@ public class UserInterfaceApplication {
         boolean running = true;
 
         while (running) {
-            input.showMessage("Выберите действие:");
-            input.showMessage("1. Ввести данные");
-            input.showMessage("2. Сортировать данные");
-            input.showMessage("3. Найти элемент");
-            input.showMessage("4. Вывести текущие данные");
-            input.showMessage("5. Выйти");
+            input.showMessage("""
+                    Выберите действие:
+                    1. Ввести данные.
+                    2. Сортировать данные.
+                    3. Найти элемент.
+                    4. Вывести текущие данные в консоль.
+                    5. Сохранить текущие данные в файл.
+                    6. Выйти.
+                    """);
 
             int choice = parseInt(input.readLine(), -1);
 
@@ -43,7 +45,8 @@ public class UserInterfaceApplication {
                 case 2 -> handleSort();
                 case 3 -> handleSearch();
                 case 4 -> displayInfo();
-                case 5 -> {
+                case 5 -> handleSaveToFile();
+                case 6 -> {
                     running = false;
                     input.showMessage("Выход из программы.");
                 }
@@ -51,6 +54,7 @@ public class UserInterfaceApplication {
             }
         }
     }
+
 
     private void handleInput() {
         var collectionLoader = new CollectionLoader(input);
@@ -163,6 +167,24 @@ public class UserInterfaceApplication {
             currentData.forEach(data -> input.showMessage(data.toString()));
         }
     }
+
+    //todo проверять является ли путь файлом
+    private void handleSaveToFile() {
+        input.showMessage("Введите путь к файлу для сохранения данных: ");
+        String path = input.readLine();
+
+        if (currentData == null || currentData.isEmpty()){
+            input.showErrorMessage("Коллекция для сохранения отсутствует.");
+        }
+
+        try {
+            FileHandler.writeCollectionToFile(path, currentData);
+        } catch (IOException exception) {
+            input.showErrorMessage("При сохранении коллекции возникла ошибка: "
+                    + exception.getMessage());
+        }
+    }
+
 
 //    private List<Object> chooseInputMethod(String type) {
 //        input.showMessage("Выберите способ ввода данных:");

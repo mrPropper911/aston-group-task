@@ -96,6 +96,12 @@ public class Car implements Serializable, Comparable<Car>, ObjectBuilder<Car> {
     }
 
     @Override
+    public String write(Object obj) {
+        Car car = (Car) obj;
+        return "Car:" + car.getPower() + "," + car.getModel() + "," + car.getYearRelease();
+    }
+
+    @Override
     public Integer getValue() {
         return power;
     }

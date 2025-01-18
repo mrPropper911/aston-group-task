@@ -13,40 +13,41 @@ import by.aston.model.Vegetable;
 
 public class RandomObjectGenerator {
 
-    private static final Random RANDOM = new Random();
+    private static final Random random = new Random();
 
-    public static <T> List<T> generateCollection(Class<T> clazz, int count){
+    public static <T> List<T> getObjectList(Class<T> clazz, int count){
         List<T> collection = new ArrayList<>();
-        List<String> names = loadDataFromFile("src/resources/names.txt"); // Путь к файлу с именами
-        List<String> titles = loadDataFromFile("src/resources/titles.txt");
-        List<String> models = loadDataFromFile("src/resources/models.txt");
-        List<String> colors = loadDataFromFile("src/resources/colors.txt");
+
+        List<String> PATH_BOOK_AUTHORS = loadDataFromFile("src/resources/names.txt");
+        List<String> PATH_BOOK_TITLES = loadDataFromFile("src/resources/titles.txt");
+        List<String> PATH_CAR_MODELS = loadDataFromFile("src/resources/models.txt");
+        List<String> PATH_CAR_COLORS = loadDataFromFile("src/resources/colors.txt");
         List<String> vegetables = loadDataFromFile("src/resources/vegetables.txt");
 
             try{
                 if (clazz == Car.class) {
-                    String randomModel = models.get(RANDOM.nextInt(models.size()));
+                    String randomModel = PATH_CAR_MODELS.get(random.nextInt(PATH_CAR_MODELS.size()));
                     Car car = new Car.Builder()
                             .model(randomModel)
-                            .power(RANDOM.nextInt(300) + 100) // Мощность от 100 до 400
-                            .yearRelease(RANDOM.nextInt(30) + 1990) // Год от 1990 до 2020
+                            .power(random.nextInt(300) + 100) // Мощность от 100 до 400
+                            .yearRelease(random.nextInt(30) + 1990) // Год от 1990 до 2020
                             .build();
                     collection.add(clazz.cast(car));
                 } else if (clazz == Book.class) {
-                    String randomAuthor = names.get(RANDOM.nextInt(names.size())); // Случайный автор из файла
-                    String randomTitle = titles.get(RANDOM.nextInt(titles.size()));
+                    String randomAuthor = PATH_BOOK_AUTHORS.get(random.nextInt(PATH_BOOK_AUTHORS.size())); // Случайный автор из файла
+                    String randomTitle = PATH_BOOK_TITLES.get(random.nextInt(PATH_BOOK_TITLES.size()));
                     Book book = new Book.Builder()
                             .author(randomAuthor)
                             .title(randomTitle)
-                            .numberPages(RANDOM.nextInt(500) + 100) // Количество страниц от 100 до 600
+                            .numberPages(random.nextInt(500) + 100) // Количество страниц от 100 до 600
                             .build();
                     collection.add(clazz.cast(book));
                 } else if (clazz == Vegetable.class) {
-                    String randomColor = colors.get(RANDOM.nextInt(colors.size()));
-                    String randomVegetables = vegetables.get(RANDOM.nextInt(vegetables.size()));
+                    String randomColor = PATH_CAR_COLORS.get(random.nextInt(PATH_CAR_COLORS.size()));
+                    String randomVegetables = vegetables.get(random.nextInt(vegetables.size()));
                     Vegetable vegetable = new Vegetable.Builder()
                             .type(randomVegetables)
-                            .weight(RANDOM.nextDouble() * 10) // Вес от 0 до 10
+                            .weight(random.nextDouble() * 10) // Вес от 0 до 10
                             .color(randomColor)
                             .build();
                     collection.add(clazz.cast(vegetable));

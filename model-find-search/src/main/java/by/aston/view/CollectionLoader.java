@@ -21,22 +21,17 @@ public class CollectionLoader {
         RandomObjectGenerator randomObjectGenerator = new RandomObjectGenerator();
         FileHandler fileHandler = new FileHandler();
 
-        List<Car> carCollection = null; // Для хранения коллекции автомобилей
-        List<Book> bookCollection = null; // Для хранения коллекции книг
-        List<Vegetable> vegetableCollection = null; // Для хранения коллекции корнеплодов
-
         while (true) {
-            input.showMessage("Выберите действие:");
-            input.showMessage("1. Создать коллекцию объектов вручную.");
-            input.showMessage("2. Сгенерировать коллекцию случайных объектов.");
-            input.showMessage("3. Считать коллекцию из файла.");
-            input.showMessage("4. Записать коллекцию в файл."); //todo записать это метод inputOfData?
-            input.showMessage("5. Выход.");
+            //todo записать это метод inputOfData?
+            input.showMessage("""
+                    Выберите действие:
+                    1. Создать коллекцию объектов вручную.
+                    2. Сгенерировать коллекцию случайных объектов.
+                    3. Считать коллекцию из файла.
+                    4. Выход.
+                    """);
 
-//            int choice = keyboardInput.scanner.nextInt();
-//            keyboardInput.scanner.nextLine(); // consume newline
-
-            int choice = NumberUtils.parseInt(input.readLine(), -1);
+            int choice = NumberUtils.parseInt(input.readLine());//todo try везде
 
             switch (choice) {
                 case 1 -> {
@@ -44,7 +39,10 @@ public class CollectionLoader {
                     return keyboardInput.getObjectList();
                 }
                 case 2 -> {
-                    return generateRandomCollection(randomObjectGenerator);
+                    return generateRandomCollection(randomObjectGenerator);//todo
+                }
+                case 3 -> {
+                    return readCollectionFromFile(fileHandler);
                 }
                 case 5 -> {
                     return Collections.emptyList();
@@ -85,25 +83,30 @@ public class CollectionLoader {
 
     private <T> List<T> generateRandomCollection(RandomObjectGenerator randomObjectGenerator) {
         try {
-            input.showMessage("Введите тип объекта (1 - Машина, 2 - Книга, 3 - Корнеплоды): ");
-            int type = NumberUtils.parseInt(input.readLine());
+            input.showMessage("""
+                    Выберите тип коллекции для генерации:
+                    1. Автомобили
+                    2. Книги
+                    3. Корнеплоды
+                    """);
+            int userObjectChoice = NumberUtils.parseInt(input.readLine());
 
-            input.showMessage("Введите количество объектов: ");
-            int count = NumberUtils.parseInt(input.readLine());
+            input.showMessage("Введите количество элементов для генерации: ");
+            int userCountOfObjectChoice = NumberUtils.parseInt(input.readLine());
 
             List<?> randomCollection = null;
 
-            switch (type) {
+            switch (userObjectChoice) {
                 case 1:
-                    randomCollection = randomObjectGenerator.generateCollection(Car.class, count);
+                    randomCollection = randomObjectGenerator.getObjectList(Car.class, userCountOfObjectChoice);
                     input.showMessage("Сгенерированные автомобили: " + randomCollection);
                     break;
                 case 2:
-                    randomCollection = randomObjectGenerator.generateCollection(Book.class, count);
+                    randomCollection = randomObjectGenerator.getObjectList(Book.class, userCountOfObjectChoice);
                     input.showMessage("Сгенерированные книги: " + randomCollection);
                     break;
                 case 3:
-                    randomCollection = randomObjectGenerator.generateCollection(Vegetable.class, count);
+                    randomCollection = randomObjectGenerator.getObjectList(Vegetable.class, userCountOfObjectChoice);
                     input.showMessage("Сгенерированные корнеплоды: " + randomCollection);
                     break;
                 default:
@@ -118,11 +121,12 @@ public class CollectionLoader {
         return Collections.emptyList();
     }
 
-    private List<?> readCollectionFromFile(FileHandler fileHandler, KeyboardInput keyboardInput) {
-        System.out.print("Введите путь к файлу для чтения: ");
-        String readFilePath = keyboardInput.scanner.nextLine();
-        System.out.print("Введите тип объекта (1 - Машина, 2 - Книга, 3 - Корнеплоды): ");
-        int readType = keyboardInput.scanner.nextInt();
+    private <T> List<T> readCollectionFromFile(FileHandler fileHandler) {
+        input.showMessage("Введите путь к файлу для чтения: ");
+        var readFilePath = input.readLine();
+
+        input.showMessage("Введите тип объекта (1 - Машина, 2 - Книга, 3 - Корнеплоды): ");
+        var readType = NumberUtils.parseInt(input.readLine());
         List<?> collection = null;
 
         try {
@@ -146,30 +150,31 @@ public class CollectionLoader {
         } catch (IOException | ClassNotFoundException e) {
             input.showMessage("Ошибка при чтении из файла: " + e.getMessage());
         }
-        return collection;
+//        return collection;//todo
+        return Collections.emptyList();
     }
 
-    private void writeCollectionToFile(FileHandler fileHandler, KeyboardInput keyboardInput,
-                                       List<Car> carCollection, List<Book> bookCollection,
-                                       List<Vegetable> vegetableCollection) {
-        System.out.print("Введите путь к файлу для записи: ");
-        String writeFilePath = keyboardInput.scanner.nextLine();
-
-        try {
-            if (carCollection != null && !carCollection.isEmpty()) {
-                fileHandler.writeCollectionToFile(writeFilePath, carCollection);
-                input.showMessage("Коллекция автомобилей записана в файл.");
-            } else if (bookCollection != null && !bookCollection.isEmpty()) {
-                fileHandler.writeCollectionToFile(writeFilePath, bookCollection);
-                input.showMessage("Коллекция книг записана в файл.");
-            } else if (vegetableCollection != null && !vegetableCollection.isEmpty()) {
-                fileHandler.writeCollectionToFile(writeFilePath, vegetableCollection);
-                input.showMessage("Коллекция корнеплодов записана в файл.");
-            } else {
-                input.showMessage("Нет коллекции для записи.");
-            }
-        } catch (IOException e) {
-            input.showMessage("Ошибка при записи в файл: " + e.getMessage());
-        }
-    }
+//    private void writeCollectionToFile(FileHandler fileHandler, KeyboardInput keyboardInput,
+//                                       List<Car> carCollection, List<Book> bookCollection,
+//                                       List<Vegetable> vegetableCollection) {
+//        input.showMessage("Введите путь к файлу для записи: ");
+//        String writeFilePath = input.readLine();
+//
+//        try {
+//            if (carCollection != null && !carCollection.isEmpty()) {
+//                fileHandler.writeCollectionToFile(writeFilePath, carCollection);
+//                input.showMessage("Коллекция автомобилей записана в файл.");
+//            } else if (bookCollection != null && !bookCollection.isEmpty()) {
+//                fileHandler.writeCollectionToFile(writeFilePath, bookCollection);
+//                input.showMessage("Коллекция книг записана в файл.");
+//            } else if (vegetableCollection != null && !vegetableCollection.isEmpty()) {
+//                fileHandler.writeCollectionToFile(writeFilePath, vegetableCollection);
+//                input.showMessage("Коллекция корнеплодов записана в файл.");
+//            } else {
+//                input.showMessage("Нет коллекции для записи.");
+//            }
+//        } catch (IOException e) {
+//            input.showMessage("Ошибка при записи в файл: " + e.getMessage());
+//        }
+//    }
 }

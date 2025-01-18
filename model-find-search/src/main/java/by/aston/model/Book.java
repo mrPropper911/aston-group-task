@@ -51,6 +51,7 @@ public class Book implements Serializable, Comparable<Book>, ObjectBuilder<Book>
                 + author + ", количество страниц - " + numberPages;
     }
 
+
     @Override
     public int compareTo(Book book) {
         int authorsCompareResult = this.author.compareTo(book.author);
@@ -89,6 +90,12 @@ public class Book implements Serializable, Comparable<Book>, ObjectBuilder<Book>
             input.showErrorMessage("Ошибка валидации: " + exception.getMessage());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String write(Object obj) {
+        Book book = (Book) obj;
+        return "Book" + book.getTitle() + "," + book.getAuthor() + "," + book.getNumberPages();
     }
 
     @Override

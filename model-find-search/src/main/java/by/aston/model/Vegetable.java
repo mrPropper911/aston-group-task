@@ -98,6 +98,13 @@ public class Vegetable implements Serializable, Comparable<Vegetable>, ObjectBui
     }
 
     @Override
+    public String write(Object obj) {
+        Vegetable vegetable = (Vegetable) obj;
+        return "Vegetable:" + vegetable.getType() + ","
+                + vegetable.getWeight() + "," + vegetable.getColor();
+    }
+
+    @Override
     public Integer getValue() {
         return (int) Math.ceil(weight);
     }
