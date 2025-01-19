@@ -6,6 +6,9 @@ import by.aston.model.Car;
 import by.aston.model.Vegetable;
 import by.aston.service.CustomAlgorithm;
 import by.aston.service.CustomCollections;
+import by.aston.service.algorithm.ExtraSort;
+import by.aston.service.algorithm.ShellSort;
+import by.aston.service.algorithm.SortContext;
 import by.aston.utils.NumberUtils;
 import by.aston.view.CollectionLoader;
 import by.aston.view.DataInput;
@@ -78,7 +81,9 @@ public class UserInterfaceApplication {
             switch (choice) {
                 case 1 -> {
                     try {
-                        CustomCollections.sortWildcard(currentData);
+//                        CustomCollections.sortWildcard(currentData);
+                        SortContext sortContext = new SortContext(new ShellSort());
+                        sortContext.sortWildcard(currentData);
                     } catch (IllegalArgumentException exception) {
                         input.showErrorMessage("Ошибка сортировки: " + exception.getMessage());
                         return;
@@ -86,7 +91,9 @@ public class UserInterfaceApplication {
                 }
                 case 2 -> {
                     try {
-                        CustomAlgorithm.naturalOrderForEvenSortWildcard(currentData);
+//                        CustomAlgorithm.naturalOrderForEvenSortWildcard(currentData);
+                        SortContext sortContext = new SortContext(new ExtraSort());
+                        sortContext.sortWildcard(currentData);
                     } catch (IllegalArgumentException exception) {
                         input.showErrorMessage("Ошибка сортировки чётных/нечётных значений: " +
                                 exception.getMessage());
