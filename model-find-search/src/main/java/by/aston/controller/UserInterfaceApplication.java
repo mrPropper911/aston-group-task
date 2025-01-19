@@ -188,24 +188,15 @@ public class UserInterfaceApplication {
             input.showErrorMessage("Коллекция для сохранения отсутствует.");
         }
 
-        String choise = "";
-        boolean whileBreak = false;
         try {
-            do{
-                input.showMessage("Что бы перезаписать файл введите: 1 ");
-                input.showMessage("Что бы добавить в конец файла введите: 2 ");
-                choise = input.readLine();
-                switch (choise){
-                    case "1":
-                        FileHandler.writeCollectionToFile(path, currentData);
-                        whileBreak = true;
-                        break;
-                    case "2":
-                        FileHandler.writeCollectionToFileWithAppend(path, currentData);
-                        whileBreak = true;
-                        break;
-                }
-            }while (!whileBreak);
+            input.showMessage("Что бы перезаписать файл введите: 1 ");
+            input.showMessage("Что бы добавить в конец файла введите: 2 ");
+            int choice = NumberUtils.parseInt(input.readLine());
+            switch (choice){
+                case 1 -> FileHandler.writeCollectionToFile(path, currentData);
+                case 2 -> FileHandler.writeCollectionToFileWithAppend(path, currentData);
+                default -> System.out.println("Неверный выбор.");
+            }
         } catch (IOException exception) {
             input.showErrorMessage("При сохранении коллекции возникла ошибка: " +
                     exception.getMessage());
