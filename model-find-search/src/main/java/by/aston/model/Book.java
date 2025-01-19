@@ -61,7 +61,6 @@ public class Book implements Serializable, Comparable<Book>,
                 + author + ", количество страниц - " + numberPages;
     }
 
-
     @Override
     public int compareTo(Book book) {
         var authorsCompareResult = this.author.compareTo(book.author);

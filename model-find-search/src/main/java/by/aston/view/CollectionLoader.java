@@ -111,7 +111,7 @@ public class CollectionLoader {
 
     private <T> List<T> readAndDisplayCollection(String filePath, Class<T> clazz) {
         try {
-            List<T> collection = FileHandler.readCollectionFromFile(filePath, clazz);
+            var collection = FileHandler.readCollectionFromFile(filePath, clazz);
             input.showMessage("Считанная из файла коллекция: ");
             collection.forEach(data -> input.showMessage(data.toString()));
             return collection;

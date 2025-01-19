@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExtraSort implements CustomSort {
-
     /**
      * Сортировка с не естественным порядком, а именно:
      * классы с четными значениями сортируются в натуральном порядке, а с нечетными остаются на своих местах

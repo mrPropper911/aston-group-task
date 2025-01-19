@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Application {
     public static void main(String[] args) {
-        ConsoleInput consoleInput = new ConsoleInput(new Scanner(System.in));
+        var consoleInput = new ConsoleInput(new Scanner(System.in));
         var ui = new UserInterfaceApplication(consoleInput);
         ui.run();
     }
