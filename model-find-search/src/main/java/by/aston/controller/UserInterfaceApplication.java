@@ -81,9 +81,7 @@ public class UserInterfaceApplication {
             switch (choice) {
                 case 1 -> {
                     try {
-//                        CustomCollections.sortWildcard(currentData);
-                        SortContext sortContext = new SortContext(new ShellSort());
-                        sortContext.sortWildcard(currentData);
+                        CustomCollections.sortWildcard(currentData);
                     } catch (IllegalArgumentException exception) {
                         input.showErrorMessage("Ошибка сортировки: " + exception.getMessage());
                         return;
@@ -91,9 +89,7 @@ public class UserInterfaceApplication {
                 }
                 case 2 -> {
                     try {
-//                        CustomAlgorithm.naturalOrderForEvenSortWildcard(currentData);
-                        SortContext sortContext = new SortContext(new ExtraSort());
-                        sortContext.sortWildcard(currentData);
+                        CustomAlgorithm.naturalOrderForEvenSortWildcard(currentData);
                     } catch (IllegalArgumentException exception) {
                         input.showErrorMessage("Ошибка сортировки чётных/нечётных значений: " +
                                 exception.getMessage());
