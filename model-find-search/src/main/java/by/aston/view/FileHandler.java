@@ -1,6 +1,7 @@
 package by.aston.view;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,17 +47,26 @@ public class FileHandler {
         }
     }
 
+    private static void writeObjectToFileWithAppend(File file, Object obj) throws IOException {
+        if (file.length() == 0){
+            try(var oos = new ObjectOutputStream(new FileOutputStream(file, true))) {
+                oos.writeObject(obj);
+            }
+        }
+        else {
+            try(var moos = new MyObjectOutputStream(new FileOutputStream(file, true))) {
+                moos.writeObject(obj);}
+        }
+    }
+
+
     public static <T> void writeCollectionToFileWithAppend(String filePath, List<T> collection) throws IOException {
         File file = new File(filePath);
-
         if (file.exists() && !file.canWrite()) {
             throw new IOException("Файл недоступен для записи: " + filePath);
         }
-
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file, true))) {
-            for (T object : collection) {
-                outputStream.writeObject(object);
-            }
+        for (T object : collection) {
+            writeObjectToFileWithAppend(file, object);
         }
     }
 }
