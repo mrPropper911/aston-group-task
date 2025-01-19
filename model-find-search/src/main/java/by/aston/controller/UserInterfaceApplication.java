@@ -6,9 +6,6 @@ import by.aston.model.Car;
 import by.aston.model.Vegetable;
 import by.aston.service.CustomAlgorithm;
 import by.aston.service.CustomCollections;
-import by.aston.service.algorithm.ExtraSort;
-import by.aston.service.algorithm.ShellSort;
-import by.aston.service.algorithm.SortContext;
 import by.aston.utils.NumberUtils;
 import by.aston.view.CollectionLoader;
 import by.aston.view.DataInput;
@@ -191,7 +188,7 @@ public class UserInterfaceApplication {
         try {
             input.showMessage("Что бы перезаписать файл введите: 1 ");
             input.showMessage("Что бы добавить в конец файла введите: 2 ");
-            int choice = NumberUtils.parseInt(input.readLine());
+            var choice = NumberUtils.parseInt(input.readLine());
             switch (choice){
                 case 1 -> FileHandler.writeCollectionToFile(path, currentData);
                 case 2 -> FileHandler.writeCollectionToFileWithAppend(path, currentData);

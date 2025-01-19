@@ -23,7 +23,7 @@ public class SortContext {
      * @param comparator компаратор требуемый для сравнения элементов
      * @throws IllegalArgumentException если список или компаратор равен null
      */
-    public <T extends ObjectBuilder & Comparable<T>> void sort(List<T> list, Comparator<? super T> comparator){
+    public <T extends ObjectBuilder & Comparable<T>> void sort(List<T> list, Comparator<? super T> comparator) {
         if (list == null || comparator == null) {
             throw new IllegalArgumentException("Список и компаратор не может быть пустым.");
         }
@@ -36,7 +36,7 @@ public class SortContext {
      * @param list список для сортировки
      * @throws IllegalArgumentException если список равен null
      */
-    public void sortWildcard(List<?> list){
+    public void sortWildcard(List<?> list) {
         if (list == null) {
             throw new IllegalArgumentException("Список не может быть пустым.");
         }

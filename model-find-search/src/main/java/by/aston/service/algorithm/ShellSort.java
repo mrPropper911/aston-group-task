@@ -21,37 +21,6 @@ public final class ShellSort implements CustomSort {
     }
 
     /**
-     * Сортировка с использованием wildcard и естественного порядка (Comparable)
-     *
-     * @param list список для сортировки
-     * @throws IllegalArgumentException если список равен null
-     */
-    public void sortWildcard(List<?> list){
-        if (list == null) {
-            throw new IllegalArgumentException("Список не может быть пустым.");
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Comparable<Object>> comparableList = (List<Comparable<Object>>) list;
-        sort(comparableList);
-    }
-
-    /**
-     * Сортировка с использованием компаратора
-     *
-     * @param list       список для сортировки
-     * @param comparator компаратор требуемый для сравнения элементов
-     * @throws IllegalArgumentException если список или компаратор равен null
-     */
-    @Override
-    public <T extends ObjectBuilder & Comparable<T>> void sort(List<T> list, Comparator<? super T> comparator) {
-        if (list == null || comparator == null) {
-            throw new IllegalArgumentException("Список и компаратор не может быть пустым.");
-        }
-        shellSort(list, comparator);
-    }
-
-    /**
      * Сортировка Шелла
      *
      * @param list       список для сортировки
@@ -75,5 +44,36 @@ public final class ShellSort implements CustomSort {
                 list.set(j, temp);
             }
         }
+    }
+
+    /**
+     * Сортировка с использованием wildcard и естественного порядка (Comparable)
+     *
+     * @param list список для сортировки
+     * @throws IllegalArgumentException если список равен null
+     */
+    public void sortWildcard(List<?> list) {
+        if (list == null) {
+            throw new IllegalArgumentException("Список не может быть пустым.");
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Comparable<Object>> comparableList = (List<Comparable<Object>>) list;
+        sort(comparableList);
+    }
+
+    /**
+     * Сортировка с использованием компаратора
+     *
+     * @param list       список для сортировки
+     * @param comparator компаратор требуемый для сравнения элементов
+     * @throws IllegalArgumentException если список или компаратор равен null
+     */
+    @Override
+    public <T extends ObjectBuilder & Comparable<T>> void sort(List<T> list, Comparator<? super T> comparator) {
+        if (list == null || comparator == null) {
+            throw new IllegalArgumentException("Список и компаратор не может быть пустым.");
+        }
+        shellSort(list, comparator);
     }
 }

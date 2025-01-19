@@ -1,6 +1,7 @@
 package by.aston.view;
 
-import by.aston.model.*;
+import by.aston.model.ObjectBuilder;
+import by.aston.model.ObjectBuilderFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class RandomObjectGenerator {
         ObjectBuilderFactory factory = new ObjectBuilderFactory();
         ObjectBuilder<T> objectBuilder = factory.getFactory(clazz);
 
-        for (var i = 0; i < count; i++){
+        for (var i = 0; i < count; i++) {
             collection.add(objectBuilder.createRandomObject());
         }
         return collection;
