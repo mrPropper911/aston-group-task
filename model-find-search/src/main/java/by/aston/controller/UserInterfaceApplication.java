@@ -189,7 +189,14 @@ public class UserInterfaceApplication {
         }
 
         try {
-            FileHandler.writeCollectionToFile(path, currentData);
+            input.showMessage("Что бы перезаписать файл введите: 1 ");
+            input.showMessage("Что бы добавить в конец файла введите: 2 ");
+            int choice = NumberUtils.parseInt(input.readLine());
+            switch (choice){
+                case 1 -> FileHandler.writeCollectionToFile(path, currentData);
+                case 2 -> FileHandler.writeCollectionToFileWithAppend(path, currentData);
+                default -> System.out.println("Неверный выбор.");
+            }
         } catch (IOException exception) {
             input.showErrorMessage("При сохранении коллекции возникла ошибка: " +
                     exception.getMessage());
