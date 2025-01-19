@@ -1,14 +1,9 @@
 package by.aston.controller;
 
 
-import by.aston.model.Book;
-import by.aston.model.Car;
-import by.aston.model.Vegetable;
+import by.aston.model.*;
 import by.aston.service.CustomAlgorithm;
 import by.aston.service.CustomCollections;
-import by.aston.service.algorithm.ExtraSort;
-import by.aston.service.algorithm.ShellSort;
-import by.aston.service.algorithm.SortContext;
 import by.aston.utils.NumberUtils;
 import by.aston.view.CollectionLoader;
 import by.aston.view.DataInput;
@@ -146,13 +141,7 @@ public class UserInterfaceApplication {
     @SuppressWarnings("unchecked")
     private <T> T createSearchObject(Class<?> clazz, String key) {
         try {
-            if (clazz == Car.class) {
-                return (T) new Car.Builder().model(key).build();
-            } else if (clazz == Book.class) {
-                return (T) new Book.Builder().title(key).build();
-            } else if (clazz == Vegetable.class) {
-                return (T) new Vegetable.Builder().type(key).build();
-            }
+            return (T) ObjectBuilderFactory.getFactoryWithFields(clazz, key);
         } catch (Exception e) {
             input.showMessage("Ошибка создания объекта для поиска: " + e.getMessage());
         }
@@ -161,14 +150,7 @@ public class UserInterfaceApplication {
 
     @SuppressWarnings("unchecked")
     private <T> Comparator<T> getComparator(Class<?> clazz) {
-        if (clazz == Car.class) {
-            return (Comparator<T>) Comparator.comparing(obj -> ((Car) obj).getModel());//Поиск по model
-        } else if (clazz == Book.class) {
-            return (Comparator<T>) Comparator.comparing(obj -> ((Book) obj).getTitle());//Поиск по title
-        } else if (clazz == Vegetable.class) {
-            return (Comparator<T>) Comparator.comparing(obj -> ((Vegetable) obj).getType());//Поиск по type
-        }
-        return null;
+        return (Comparator<T>) ObjectBuilderFactory.getFactoryObjectComparator(clazz);
     }
 
     private void displayInfo() {
