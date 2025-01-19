@@ -1,7 +1,6 @@
-package by.aston.service.further_sort;
+package by.aston.service;
 
 import by.aston.model.Book;
-import by.aston.service.CustomCollections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -65,6 +64,21 @@ public class CustomAlgorithmTest {
         );
 
         assertThat(list).containsExactlyElementsOf(expectedBookList);
+    }
 
+    @Test
+    void testOfExpectedElementsWildcard() {
+        CustomAlgorithm.naturalOrderForEvenSortWildcard(list);
+
+        List<Book> expectedBookList = Arrays.asList(
+                new Book.Builder().numberPages(501).author("A").title("A").build(),
+                new Book.Builder().numberPages(200).author("C").title("C").build(),
+                new Book.Builder().numberPages(400).author("E").title("E").build(),
+                new Book.Builder().numberPages(101).author("D").title("D").build(),
+                new Book.Builder().numberPages(800).author("B").title("B").build(),
+                new Book.Builder().numberPages(701).author("F").title("F").build()
+        );
+
+        assertThat(list).containsExactlyElementsOf(expectedBookList);
     }
 }

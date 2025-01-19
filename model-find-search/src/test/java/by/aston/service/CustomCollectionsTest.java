@@ -35,7 +35,8 @@ class CustomCollectionsTest {
 
     @Test
     void testSortingWithComparator() {
-        Comparator<Car> carComparator = Comparator.comparingInt(Car::getYearRelease)
+        Comparator<Car> carComparator = Comparator
+                .comparingInt(Car::getYearRelease)
                 .thenComparing(Car::getModel);
 
         CustomCollections.sort(list, carComparator);

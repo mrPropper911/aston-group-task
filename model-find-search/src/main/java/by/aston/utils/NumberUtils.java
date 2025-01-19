@@ -4,17 +4,19 @@ package by.aston.utils;
  * Утилитный класс для работы с числами.
  */
 public class NumberUtils {
-
-    /**
-     * Проверяет, является ли объект четным числом.
-     *
-     * @param obj объект для проверки
-     * @return true, если объект является четным числом;иначе false
-     */
-    public static boolean isEven(Object obj) {
-        if (obj instanceof Number) {
-            return ((Number) obj).intValue() % 2 == 0;
+    public static int parseInt(String value) throws NumberFormatException{
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Ошибка ввода целого числа. Необходимо ввести корректное значение: " + value);
         }
-        return false;
+    }
+
+    public static double parseDouble(String value) throws NumberFormatException{
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Ошибка ввода вещественного числа. Необходимо ввести корректное значение: " + value);
+        }
     }
 }
